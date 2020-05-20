@@ -154,6 +154,8 @@ class Tree {
             this.boom = 1;
         }
         this.element.style.backgroundImage = `url(../src/assets/images/scenery/Armored_Tree${this.boom}.png)`;
+    }
+}
 class Tower {
     constructor(towerLevel) {
         this.x = 0;

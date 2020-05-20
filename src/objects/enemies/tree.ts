@@ -1,5 +1,6 @@
 class Tree {
-
+    x = 0
+    y = 300
     element : HTMLElement
     boom    : number = 1
 
@@ -9,6 +10,7 @@ class Tree {
         this.element = document.createElement("tree")
         let game = document.getElementsByTagName("game")[0]
         game.appendChild(this.element)
+        this.element.style.transform = `translate(${this.x}px, ${this.y}px)`
         
         this.element.addEventListener("click", () => this.beweeg())
     }
