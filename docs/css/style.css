@@ -17,3 +17,8 @@ enemy {
     background-image: url(../../src/assets/images/enemies/monster_placeholder.png);
     width:130px; height: 110px;
 }
+
+tree {
+    background-image: url(../../src/assets/images/scenery/Armored_Tree1.png);
+    width: 256px; height: 256px;
+}
