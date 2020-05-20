@@ -16,15 +16,14 @@ class Game {
     constructor(){
         console.log("game created!")
         this.tower1 = new Tower(1)
-
         this.bullet1 = new Bullet(1)
-        
+        this.castle = new Castle()
+
         this.enemy1 = new Enemy(1)
         this.enemy2 = new Enemy(2)
         this.enemy3 = new Enemy(3)
         this.enemy4 = new Enemy(5)
-        this.enemy5 = new Enemy(0.5)
-        this.castle = new Castle()
+        this.enemy5 = new Enemy(0.2)
 
 
         this.gameLoop()

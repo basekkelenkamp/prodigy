@@ -63,7 +63,7 @@ class Enemy {
                 break;
 
             case 2 :
-                if (this.x > 1300){
+                if (this.x > 1100){
                     console.log("move up")
                     this.yspeed = -0.75 / this.strength
                     this.xspeed = 0
@@ -81,7 +81,7 @@ class Enemy {
                 }
     
             case 4 : 
-                if (this.x > innerWidth - this.element.clientWidth){
+                if (this.x > innerWidth - 260){
                 console.log("reset")
                 this.x = 0
                 this.y = 200
