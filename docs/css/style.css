@@ -18,8 +18,19 @@ enemy {
     width:130px; height: 110px;
 }
 
-castle {
-    background-image: url(../../src/assets/images/castle/castle1.png);
-    width:260px; height: 220px;
+tower {
+    background-image: url(../../src/assets/images/towers/basicTower.png);
+    width: 100%; height: 100%;
 }
 
+bullet {
+        width: 10px;
+        height: 10px;
+        border-radius: 25px;
+        background-color: yellow;
+}
+
+/* shot{
+    background-image: url(../../src/assets/images/towers/basicTower.png);
+    width: 100%; height: 100%;
+} */
