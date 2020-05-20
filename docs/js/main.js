@@ -7,6 +7,7 @@ class Game {
         this.enemy2 = new Enemy(2);
         this.enemy3 = new Enemy(3);
         this.enemy4 = new Enemy(5);
+        this.enemy5 = new Enemy(0.5);
         this.gameLoop();
     }
     gameLoop() {
@@ -15,6 +16,7 @@ class Game {
         this.enemy2.move();
         this.enemy3.move();
         this.enemy4.move();
+        this.enemy5.move();
         requestAnimationFrame(() => this.gameLoop());
     }
 }
@@ -25,7 +27,8 @@ class Enemy {
         this.yspeed = 0;
         this.state = 0;
         this.x = 0;
-        this.y = 0;
+        this.y = 200;
+        console.log(`h:${innerHeight} w:${innerWidth}`);
         this.strength = level;
         this.healthPoints = level * 100;
         this.damage = level * 5;
@@ -44,19 +47,44 @@ class Enemy {
         this.y += this.yspeed;
         switch (this.state) {
             case 0:
-                if (this.x > 200) {
+                if (this.x > 300) {
+                    console.log("move down");
                     this.yspeed = 0.75 / this.strength;
                     this.xspeed = 0;
                     this.state = 1;
                 }
                 break;
             case 1:
-                if (this.y > 500) {
+                if (this.y > 700) {
+                    console.log("move right");
                     this.xspeed = 0.75 / this.strength;
                     this.yspeed = 0;
                     this.state = 2;
                 }
                 break;
+            case 2:
+                if (this.x > 1300) {
+                    console.log("move up");
+                    this.yspeed = -0.75 / this.strength;
+                    this.xspeed = 0;
+                    this.state = 3;
+                    break;
+                }
+            case 3:
+                if (this.y < 400) {
+                    console.log("move right");
+                    this.xspeed = 0.75 / this.strength;
+                    this.yspeed = 0;
+                    this.state = 4;
+                    break;
+                }
+            case 4:
+                if (this.x > innerWidth - this.element.clientWidth) {
+                    console.log("reset");
+                    this.x = 0;
+                    this.y = 200;
+                    this.state = 0;
+                }
         }
         this.element.style.transform = `translate(${this.x}px, ${this.y}px)`;
     }

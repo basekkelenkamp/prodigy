@@ -10,6 +10,7 @@ class Game {
     enemy2 : Enemy
     enemy3 : Enemy
     enemy4 : Enemy
+    enemy5 : Enemy
 
     constructor(){
         console.log("game created!")
@@ -21,6 +22,7 @@ class Game {
         this.enemy2 = new Enemy(2)
         this.enemy3 = new Enemy(3)
         this.enemy4 = new Enemy(5)
+        this.enemy5 = new Enemy(0.5)
 
 
         this.gameLoop()
@@ -32,6 +34,7 @@ class Game {
         this.enemy2.move()
         this.enemy3.move()
         this.enemy4.move()
+        this.enemy5.move()
 
         requestAnimationFrame(() => this.gameLoop())
     }

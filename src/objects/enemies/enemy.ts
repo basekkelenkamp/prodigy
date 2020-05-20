@@ -11,9 +11,11 @@ class Enemy {
     state : number = 0
 
     x : number = 0
-    y : number = 0
+    y : number = 200
 
     constructor(level : number){
+
+        console.log(`h:${innerHeight} w:${innerWidth}`)
 
         //Initialize enemy: || STRENGTH || HP || DAMAGE || SPEED ||
         this.strength = level
@@ -43,7 +45,8 @@ class Enemy {
          
         switch (this.state) {
             case 0 : 
-                if (this.x > 200) {
+                if (this.x > 300) {
+                    console.log("move down")
                     this.yspeed = 0.75 / this.strength
                     this.xspeed = 0
                     this.state = 1
@@ -51,13 +54,40 @@ class Enemy {
             break;
 
             case 1 :
-                if (this.y > 500) {
+                if (this.y > 700) {
+                    console.log("move right")
                     this.xspeed = 0.75 / this.strength
                     this.yspeed = 0
                     this.state = 2
                 }
                 break;
 
+            case 2 :
+                if (this.x > 1300){
+                    console.log("move up")
+                    this.yspeed = -0.75 / this.strength
+                    this.xspeed = 0
+                    this.state = 3
+                break;
+                }
+
+            case 3 :
+                if (this.y < 400){
+                    console.log("move right")
+                    this.xspeed = 0.75 / this.strength
+                    this.yspeed = 0
+                    this.state = 4
+                break;
+                }
+    
+            case 4 : 
+                if (this.x > innerWidth - this.element.clientWidth){
+                console.log("reset")
+                this.x = 0
+                this.y = 200
+                this.state = 0
+                }
+       
         }
     
 
