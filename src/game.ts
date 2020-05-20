@@ -9,6 +9,7 @@ class Game {
     enemy1 : Enemy
     enemy2 : Enemy
     enemy3 : Enemy
+    tree   : Tree
     enemy4 : Enemy
     enemy5 : Enemy
     castle : Castle
@@ -22,6 +23,7 @@ class Game {
         this.enemy1 = new Enemy(1)
         this.enemy2 = new Enemy(2)
         this.enemy3 = new Enemy(3)
+        this.tree   = new Tree()
         this.enemy4 = new Enemy(5)
         this.enemy5 = new Enemy(0.2)
 
