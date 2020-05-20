@@ -17,3 +17,9 @@ enemy {
     background-image: url(../../src/assets/images/enemies/monster_placeholder.png);
     width:130px; height: 110px;
 }
+
+castle {
+    background-image: url(../../src/assets/images/castle/castle1.png);
+    width:260px; height: 220px;
+}
+
