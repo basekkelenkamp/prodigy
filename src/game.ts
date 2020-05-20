@@ -11,6 +11,7 @@ class Game {
     enemy3 : Enemy
     enemy4 : Enemy
     enemy5 : Enemy
+    castle : Castle
 
     constructor(){
         console.log("game created!")
@@ -23,6 +24,7 @@ class Game {
         this.enemy3 = new Enemy(3)
         this.enemy4 = new Enemy(5)
         this.enemy5 = new Enemy(0.5)
+        this.castle = new Castle()
 
 
         this.gameLoop()

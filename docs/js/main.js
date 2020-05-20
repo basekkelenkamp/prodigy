@@ -6,6 +6,8 @@ class Game {
         this.enemy1 = new Enemy(1);
         this.enemy2 = new Enemy(2);
         this.enemy3 = new Enemy(3);
+        this.enemy4 = new Enemy(5);
+        this.enemy5 = new Enemy(0.5);
         this.castle = new Castle();
         this.gameLoop();
     }
@@ -14,6 +16,8 @@ class Game {
         this.enemy1.move();
         this.enemy2.move();
         this.enemy3.move();
+        this.enemy4.move();
+        this.enemy5.move();
         requestAnimationFrame(() => this.gameLoop());
     }
 }
