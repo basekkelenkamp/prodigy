@@ -59,7 +59,6 @@ class Castle {
         this.healthBar = document.createElement("healthbar");
         this.healthBar.innerHTML = `${this.healthPoints}HP`;
         this.element.appendChild(this.healthBar);
-        this.element.addEventListener("click", () => this.break());
     }
     getRectangle() {
         return this.element.getBoundingClientRect();
@@ -67,17 +66,21 @@ class Castle {
     updateHP() {
         this.healthBar.innerHTML = `${this.healthPoints}HP`;
         this.element.appendChild(this.healthBar);
-    }
-    break() {
-        this.castleImg++;
-        if (this.castleImg > 6) {
-            this.castleImg = 1;
+        if (this.healthPoints < 1000) {
+            this.castleImg = 2;
+            if (this.healthPoints < 800) {
+                this.castleImg = 3;
+                if (this.healthPoints < 600) {
+                    this.castleImg = 4;
+                    if (this.healthPoints < 400) {
+                        this.castleImg = 5;
+                        if (this.healthPoints < 200) {
+                            this.castleImg = 6;
+                        }
+                    }
+                }
+            }
         }
-        this.healthPoints -= 200;
-        if (this.healthPoints < 0) {
-            this.healthPoints = 1000;
-        }
-        this.healthBar.innerHTML = `${this.healthPoints}HP`;
         this.element.style.backgroundImage = `url(../src/assets/images/castle/castle${this.castleImg}.png)`;
     }
 }
