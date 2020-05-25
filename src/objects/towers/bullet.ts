@@ -27,6 +27,9 @@ class Bullet {
 
     }
 
+    getRectangle() {
+        return this.element.getBoundingClientRect()
+    }
     
     move(){
     if (this.x > 250) {
