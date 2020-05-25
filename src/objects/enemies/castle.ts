@@ -33,9 +33,14 @@ class Castle {
 
 
     }
-    
+
     getRectangle() {
         return this.element.getBoundingClientRect()
+    }
+
+    updateHP(){
+        this.healthBar.innerHTML = `${this.healthPoints}HP`
+        this.element.appendChild(this.healthBar)
     }
 
     break(){

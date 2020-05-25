@@ -21,7 +21,7 @@ class Enemy {
         //Initialize enemy: || STRENGTH || HP || DAMAGE || SPEED ||
         this.strength = level
         this.healthPoints = level*100
-        this.damage = level*5
+        this.damage = level*60
         this.xspeed = 0.75 / this.strength
         this.yspeed = 0
 
@@ -81,7 +81,7 @@ class Enemy {
                     console.log("move right")
                     this.xspeed = 0.75 / this.strength
                     this.yspeed = 0
-                    this.state = 4
+                    // this.state = 4
                 break;
                 }
     

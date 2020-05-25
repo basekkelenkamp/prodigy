@@ -1,14 +1,14 @@
 class Game {
     constructor() {
-        this.enemiesLvl1 = [];
-        this.enemiesAmount = 3;
+        this.enemies = [];
+        this.enemiesAmount = 4;
         console.log("game created!");
         this.tower1 = new Tower(1);
         this.bullet1 = new Bullet(1);
         this.castle = new Castle();
         this.tree = new Tree();
         for (let i = 0; i < this.enemiesAmount; i++) {
-            this.enemiesLvl1.push(new Enemy(1));
+            this.enemies.push(new Enemy(i + 1));
         }
         this.gameLoop();
     }
@@ -21,12 +21,17 @@ class Game {
     gameLoop() {
         this.bullet1.move();
         for (let i = 0; i < this.enemiesAmount; i++) {
-            this.enemiesLvl1[i].move();
+            this.enemies[i].move();
         }
-        for (let i = 0; i < this.enemiesLvl1.length; i++) {
-            let hit = this.checkCollision(this.enemiesLvl1[i].getRectangle(), this.castle.getRectangle());
+        for (let i = 0; i < this.enemies.length; i++) {
+            let hit = this.checkCollision(this.enemies[i].getRectangle(), this.castle.getRectangle());
             if (hit) {
                 console.log("collision is: " + hit);
+                this.castle.healthPoints -= this.enemies[i].damage;
+                this.castle.updateHP();
+                this.enemies[i].x = 0;
+                this.enemies[i].y = 200;
+                this.enemies[i].state = 0;
             }
         }
         requestAnimationFrame(() => this.gameLoop());
@@ -53,6 +58,10 @@ class Castle {
     getRectangle() {
         return this.element.getBoundingClientRect();
     }
+    updateHP() {
+        this.healthBar.innerHTML = `${this.healthPoints}HP`;
+        this.element.appendChild(this.healthBar);
+    }
     break() {
         this.castleImg++;
         if (this.castleImg > 6) {
@@ -76,7 +85,7 @@ class Enemy {
         console.log(`h:${innerHeight} w:${innerWidth}`);
         this.strength = level;
         this.healthPoints = level * 100;
-        this.damage = level * 5;
+        this.damage = level * 60;
         this.xspeed = 0.75 / this.strength;
         this.yspeed = 0;
         this.element = document.createElement("enemy");
@@ -123,7 +132,6 @@ class Enemy {
                     console.log("move right");
                     this.xspeed = 0.75 / this.strength;
                     this.yspeed = 0;
-                    this.state = 4;
                     break;
                 }
             case 4:

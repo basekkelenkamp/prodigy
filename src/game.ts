@@ -14,13 +14,15 @@ class Game {
     enemy5 : Enemy
     castle : Castle
 
-    enemiesLvl1 : Enemy[] = []
-    enemiesAmount : number = 3
+    enemies : Enemy[] = []
+    enemiesAmount : number = 4
 
 
 
     constructor(){
         console.log("game created!")
+
+
         this.tower1 = new Tower(1)
         this.bullet1 = new Bullet(1)
         this.castle = new Castle()
@@ -34,7 +36,7 @@ class Game {
 
 
         for (let i = 0; i < this.enemiesAmount; i++) {
-            this.enemiesLvl1.push(new Enemy(1))            
+            this.enemies.push(new Enemy(i+1))            
         }
 
         this.gameLoop()
@@ -51,22 +53,23 @@ class Game {
     gameLoop() {
 
         this.bullet1.move()
-        // this.enemy1.move()
-        // this.enemy2.move()
-        // this.enemy3.move()
-        // this.enemy4.move()
-        // this.enemy5.move()
 
         for (let i = 0; i < this.enemiesAmount; i++) {
-            this.enemiesLvl1[i].move()
+            this.enemies[i].move()
         }
     
-        for (let i = 0; i < this.enemiesLvl1.length; i++) {
-            let hit = this.checkCollision(this.enemiesLvl1[i].getRectangle(), this.castle.getRectangle())
+        for (let i = 0; i < this.enemies.length; i++) {
+            let hit = this.checkCollision(this.enemies[i].getRectangle(), this.castle.getRectangle())
             
             if (hit) {
                 console.log("collision is: " + hit)
+                this.castle.healthPoints -= this.enemies[i].damage
+                this.castle.updateHP()
 
+                //reset enemy
+                this.enemies[i].x = 0
+                this.enemies[i].y = 200
+                this.enemies[i].state = 0
             }
         }
 
