@@ -73,8 +73,8 @@ class Game {
             }
         }
 
-        for (let i = 0; i < this.enemiesLvl1.length; i++) {
-            let hitEnemy = this.checkCollision(this.enemiesLvl1[i].getRectangle(), this.bullet1.getRectangle())
+        for (let i = 0; i < this.enemies.length; i++) {
+            let hitEnemy = this.checkCollision(this.enemies[i].getRectangle(), this.bullet1.getRectangle())
             
             if (hitEnemy) {
                 console.log("collision is: " + hitEnemy)
