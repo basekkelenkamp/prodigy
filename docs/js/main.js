@@ -29,6 +29,12 @@ class Game {
                 console.log("collision is: " + hit);
             }
         }
+        for (let i = 0; i < this.enemiesLvl1.length; i++) {
+            let hitEnemy = this.checkCollision(this.enemiesLvl1[i].getRectangle(), this.bullet1.getRectangle());
+            if (hitEnemy) {
+                console.log("collision is: " + hitEnemy);
+            }
+        }
         requestAnimationFrame(() => this.gameLoop());
     }
 }
@@ -167,6 +173,9 @@ class Bullet {
         this.element = document.createElement("bullet");
         let game = document.getElementsByTagName("game")[0];
         game.appendChild(this.element);
+    }
+    getRectangle() {
+        return this.element.getBoundingClientRect();
     }
     move() {
         if (this.x > 250) {
