@@ -1,24 +1,34 @@
 class Game {
     constructor() {
+        this.enemiesLvl1 = [];
+        this.enemiesAmount = 3;
         console.log("game created!");
         this.tower1 = new Tower(1);
         this.bullet1 = new Bullet(1);
         this.castle = new Castle();
-        this.enemy1 = new Enemy(1);
-        this.enemy2 = new Enemy(2);
-        this.enemy3 = new Enemy(3);
         this.tree = new Tree();
-        this.enemy4 = new Enemy(5);
-        this.enemy5 = new Enemy(0.2);
+        for (let i = 0; i < this.enemiesAmount; i++) {
+            this.enemiesLvl1.push(new Enemy(1));
+        }
         this.gameLoop();
+    }
+    checkCollision(a, b) {
+        return (a.left <= b.right &&
+            b.left <= a.right &&
+            a.top <= b.bottom &&
+            b.top <= a.bottom);
     }
     gameLoop() {
         this.bullet1.move();
-        this.enemy1.move();
-        this.enemy2.move();
-        this.enemy3.move();
-        this.enemy4.move();
-        this.enemy5.move();
+        for (let i = 0; i < this.enemiesAmount; i++) {
+            this.enemiesLvl1[i].move();
+        }
+        for (let i = 0; i < this.enemiesLvl1.length; i++) {
+            let hit = this.checkCollision(this.enemiesLvl1[i].getRectangle(), this.castle.getRectangle());
+            if (hit) {
+                console.log("collision is: " + hit);
+            }
+        }
         requestAnimationFrame(() => this.gameLoop());
     }
 }
@@ -39,6 +49,9 @@ class Castle {
         this.healthBar.innerHTML = `${this.healthPoints}HP`;
         this.element.appendChild(this.healthBar);
         this.element.addEventListener("click", () => this.break());
+    }
+    getRectangle() {
+        return this.element.getBoundingClientRect();
     }
     break() {
         this.castleImg++;
@@ -73,6 +86,9 @@ class Enemy {
         this.healthBar = document.createElement("healthbar");
         this.healthBar.innerHTML = `${this.healthPoints}HP`;
         this.element.appendChild(this.healthBar);
+    }
+    getRectangle() {
+        return this.element.getBoundingClientRect();
     }
     move() {
         this.x += this.xspeed;
@@ -121,6 +137,25 @@ class Enemy {
         this.element.style.transform = `translate(${this.x}px, ${this.y}px)`;
     }
 }
+class Tree {
+    constructor() {
+        this.x = 0;
+        this.y = 300;
+        this.boom = 1;
+        this.element = document.createElement("tree");
+        let game = document.getElementsByTagName("game")[0];
+        game.appendChild(this.element);
+        this.element.style.transform = `translate(${this.x}px, ${this.y}px)`;
+        this.element.addEventListener("click", () => this.beweeg());
+    }
+    beweeg() {
+        this.boom++;
+        if (this.boom === 5) {
+            this.boom = 1;
+        }
+        this.element.style.backgroundImage = `url(../src/assets/images/scenery/Armored_Tree${this.boom}.png)`;
+    }
+}
 class Bullet {
     constructor(strength) {
         this.x = 110;
@@ -140,22 +175,6 @@ class Bullet {
         this.x += this.speed;
         this.y = 11;
         this.element.style.transform = `translate(${this.x}px, ${this.y}px)`;
-    }
-}
-class Tree {
-    constructor() {
-        this.boom = 1;
-        this.element = document.createElement("tree");
-        let game = document.getElementsByTagName("game")[0];
-        game.appendChild(this.element);
-        this.element.addEventListener("click", () => this.beweeg());
-    }
-    beweeg() {
-        this.boom++;
-        if (this.boom === 5) {
-            this.boom = 1;
-        }
-        this.element.style.backgroundImage = `url(../src/assets/images/scenery/Armored_Tree${this.boom}.png)`;
     }
 }
 class Tower {

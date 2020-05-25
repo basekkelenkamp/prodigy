@@ -13,6 +13,7 @@ class Enemy {
     x : number = 0
     y : number = 200
 
+
     constructor(level : number){
 
         console.log(`h:${innerHeight} w:${innerWidth}`)
@@ -38,11 +39,15 @@ class Enemy {
 
     }
 
+    getRectangle() {
+        return this.element.getBoundingClientRect()
+    }
+
     move(){
 
         this.x += this.xspeed
         this.y += this.yspeed
-         
+                 
         switch (this.state) {
             case 0 : 
                 if (this.x > 300) {

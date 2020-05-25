@@ -33,6 +33,10 @@ class Castle {
 
 
     }
+    
+    getRectangle() {
+        return this.element.getBoundingClientRect()
+    }
 
     break(){
         
