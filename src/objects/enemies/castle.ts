@@ -49,6 +49,9 @@ class Castle {
                         this.castleImg = 5
                         if(this.healthPoints < 200){
                             this.castleImg = 6
+                            if(this.healthPoints < 0){
+                                this.healthPoints = 0
+                            }
                         }
                     }
                 }
