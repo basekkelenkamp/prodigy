@@ -16,7 +16,6 @@ class Tower {
          //Initialize enemy: || STRENGTH || HP || DAMAGE || SPEED ||
          this.strength = level
          this.damage = level*60
-
          
          //Create tower
          this.element = document.createElement("tower")
