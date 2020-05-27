@@ -165,14 +165,54 @@ class Enemy {
         }
         this.element.style.transform = `translate(${this.x}px, ${this.y}px)`;
     }
+<<<<<<< HEAD
+}
+class Tree {
+    constructor() {
+        this.x = 0;
+        this.y = 300;
+        this.boom = 1;
+        this.element = document.createElement("tree");
+        let game = document.getElementsByTagName("game")[0];
+        game.appendChild(this.element);
+        this.element.style.transform = `translate(${this.x}px, ${this.y}px)`;
+        this.element.addEventListener("click", () => this.beweeg());
+    }
+    beweeg() {
+        this.boom++;
+        if (this.boom === 5) {
+            this.boom = 1;
+        }
+        this.element.style.backgroundImage = `url(../src/assets/images/scenery/Armored_Tree${this.boom}.png)`;
+    }
+}
+class Bullet {
+    constructor(strength) {
+        this.x = 110;
+        this.y = 0;
+        this.strengthLevel = strength;
+        this.healthPoints = strength * 100;
+        this.damage = strength * 5;
+        this.speed = 0.75 / this.strengthLevel;
+        this.element = document.createElement("bullet");
+        let game = document.getElementsByTagName("game")[0];
+        game.appendChild(this.element);
+    }
+    move() {
+        if (this.x > 250) {
+            this.x = 110;
+=======
     updateHP() {
         this.healthBar.innerHTML = `${this.healthPoints}HP`;
         this.element.appendChild(this.healthBar);
         if (this.healthPoints < 1) {
             this.element.remove();
+>>>>>>> 872f389d783bec213bbfbb1d5e4a678315a8088a
         }
     }
 }
+<<<<<<< HEAD
+=======
 class Tree {
     constructor() {
         this.x = 0;
@@ -219,6 +259,7 @@ class Bullet {
         this.element.style.transform = `translate(${this.x}px, ${this.y}px)`;
     }
 }
+>>>>>>> 872f389d783bec213bbfbb1d5e4a678315a8088a
 class Tower {
     constructor(level) {
         this.x = 1000;
