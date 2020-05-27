@@ -4,7 +4,6 @@ class Game {
         this.enemies = [];
         this.enemiesAmount = 4;
         this.bulletCounter = 0;
-        console.log("game created!");
         this.tower1 = new Tower(1, this);
         this.castle = new Castle();
         this.tree = new Tree();
@@ -21,7 +20,6 @@ class Game {
     }
     gameLoop() {
         this.tower1.updateTower();
-        this.tower1.y += 2;
         for (const bullet of this.bullets) {
             bullet.move();
         }
@@ -104,7 +102,6 @@ class Enemy {
         this.state = 0;
         this.x = 0;
         this.y = 200;
-        console.log(`h:${innerHeight} w:${innerWidth}`);
         this.strength = level;
         this.healthPoints = level * 100;
         this.damage = level * 60;

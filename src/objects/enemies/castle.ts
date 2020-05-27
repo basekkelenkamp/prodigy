@@ -17,7 +17,7 @@ class Castle {
         let game = document.getElementsByTagName("game")[0]
         game.appendChild(this.element)
 
-
+        //Place castle
         this.x = innerWidth - this.element.clientWidth
         this.y = 300
         this.element.style.transform = `translate(${this.x}px, ${this.y}px)`
@@ -26,15 +26,14 @@ class Castle {
         this.healthBar = document.createElement("healthbar")
         this.healthBar.innerHTML = `${this.healthPoints}HP`
         this.element.appendChild(this.healthBar)
-
-
-
     }
 
+    //Create rectangle around castle
     getRectangle() {
         return this.element.getBoundingClientRect()
     }
 
+    //Update HP and image when hit
     updateHP(){
         this.healthBar.innerHTML = `${this.healthPoints}HP`
         this.element.appendChild(this.healthBar)

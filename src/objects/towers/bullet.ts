@@ -19,11 +19,12 @@ class Bullet {
 
     constructor(level : number, positionX: number, positionY: number, GameInstance : Game){
 
+        //Set bullet to center of tower
         this.gameInstance = this.gameInstance
         this.x = positionX
         this.y = positionY
         
-        //Initialize bullet: || DAMAGE || SPEED || Distance ||
+        //Initialize bullet: || DAMAGE || SPEED || Distance
         this.strength = level
         this.damage = (level * 10 + 5)
         this.distance = this.x - (level * 20 + 180)
@@ -39,10 +40,12 @@ class Bullet {
         this.element.style.filter = `hue-rotate(${0}deg)`
     }
 
+    //Create rectangle around enemy
     getRectangle() {
         return this.element.getBoundingClientRect()
     }
     
+    //Tower shoots bullets and removes them when hit or runs out of distance
     move(){
     if (this.x < this.distance) {
         this.element.remove()
@@ -52,10 +55,9 @@ class Bullet {
     this.x -= this.speed
     
     this.element.style.transform = `translate(${this.x}px, ${this.y}px)`
-}
+    }
 
-removeBullet(){
-    this.element.remove()
-}
-
+    removeBullet(){
+        this.element.remove()
+    }
 }

@@ -16,15 +16,12 @@ class Enemy {
 
     constructor(level : number){
 
-        console.log(`h:${innerHeight} w:${innerWidth}`)
-
         //Initialize enemy: || STRENGTH || HP || DAMAGE || SPEED ||
         this.strength = level
         this.healthPoints = level*100
         this.damage = level*60
         this.xspeed = 0.75 / this.strength
         this.yspeed = 0
-
 
         //Create enemy
         this.element = document.createElement("enemy")
@@ -39,10 +36,12 @@ class Enemy {
 
     }
 
+    //Create rectangle around enemy
     getRectangle() {
         return this.element.getBoundingClientRect()
     }
 
+    //Movement of the enemy
     move(){
 
         this.x += this.xspeed
@@ -95,14 +94,10 @@ class Enemy {
             
         }
         
-
-
-        
-        
         this.element.style.transform = `translate(${this.x}px, ${this.y}px)`
-
     }
 
+    //Update HP when hit, removes enemy when HP < 1
     updateHP(){
         this.healthBar.innerHTML = `${this.healthPoints}HP`
         this.element.appendChild(this.healthBar)
