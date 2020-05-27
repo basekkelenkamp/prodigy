@@ -1,30 +1,33 @@
 class Bullet {
 
     element : HTMLElement
-    healthBar : HTMLElement
 
-    strengthLevel : number
-    healthPoints : number
+    strength : number
     damage : number
-    speed : number
 
-    x : number = 110
-    y : number = 0
+    attackSpeed : number
+    speed : number = 2
 
-    constructor(strength : number){
+    
+    //Locate middle tower
+    xc : number
+    yc : number
+
+    x : number 
+    xMove : number = 500
+
+    constructor(level : number, position: DOMRect){
 
         //Initialize enemy: || STRENGTH || HP || DAMAGE || SPEED ||
-        this.strengthLevel = strength
-        this.healthPoints = strength*100
-        this.damage = strength*5
-        this.speed = 0.75 / this.strengthLevel 
+        this.strength = level
+        this.damage = level*1   
 
+        this.xc = position.x
 
         //Create bullet
         this.element = document.createElement("bullet")
         let game = document.getElementsByTagName("game")[0]
         game.appendChild(this.element)
-
     }
 
     getRectangle() {
@@ -32,14 +35,12 @@ class Bullet {
     }
     
     move(){
-    if (this.x > 250) {
-        this.x = 110
-        
+    if (this.xMove < this.x - 200) {
+        this.xMove = this.x 
     } 
 
-    this.x += this.speed
-    this.y = 11
+    this.xMove -= this.speed
 
-    this.element.style.transform = `translate(${this.x}px, ${this.y}px)`
+    this.element.style.transform = `translate(${this.xMove}px, ${this.y}px)`
     }
 }

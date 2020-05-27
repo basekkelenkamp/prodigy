@@ -2,9 +2,10 @@ class Game {
     constructor() {
         this.enemies = [];
         this.enemiesAmount = 4;
+        this.bulletCounter = 0;
         console.log("game created!");
         this.tower1 = new Tower(1);
-        this.bullet1 = new Bullet(1);
+        this.bullet = new Bullet(1, this.tower1.getLocation());
         this.castle = new Castle();
         this.tree = new Tree();
         for (let i = 0; i < this.enemiesAmount; i++) {
@@ -19,7 +20,12 @@ class Game {
             b.top <= a.bottom);
     }
     gameLoop() {
-        this.bullet1.move();
+        this.bulletCounter++;
+        if (this.bulletCounter > 60) {
+            console.log("Fire!");
+            this.bulletCounter = 0;
+        }
+        this.bullet.move();
         for (let i = 0; i < this.enemiesAmount; i++) {
             this.enemies[i].move();
         }
@@ -35,9 +41,13 @@ class Game {
             }
         }
         for (let i = 0; i < this.enemies.length; i++) {
-            let hitEnemy = this.checkCollision(this.enemies[i].getRectangle(), this.bullet1.getRectangle());
+            let hitEnemy = this.checkCollision(this.enemies[i].getRectangle(), this.bullet.getRectangle());
             if (hitEnemy) {
                 console.log("collision is: " + hitEnemy);
+                this.enemies[i].healthPoints -= this.bullet.damage;
+                this.enemies[i].updateHP();
+                this.bullet.xMove = this.bullet.x;
+                this.bullet.y = 200;
             }
         }
         requestAnimationFrame(() => this.gameLoop());
@@ -156,6 +166,13 @@ class Enemy {
         }
         this.element.style.transform = `translate(${this.x}px, ${this.y}px)`;
     }
+    updateHP() {
+        this.healthBar.innerHTML = `${this.healthPoints}HP`;
+        this.element.appendChild(this.healthBar);
+        if (this.healthPoints < 1) {
+            this.element.remove();
+        }
+    }
 }
 class Tree {
     constructor() {
@@ -177,13 +194,12 @@ class Tree {
     }
 }
 class Bullet {
-    constructor(strength) {
-        this.x = 110;
-        this.y = 0;
-        this.strengthLevel = strength;
-        this.healthPoints = strength * 100;
-        this.damage = strength * 5;
-        this.speed = 0.75 / this.strengthLevel;
+    constructor(level, position) {
+        this.speed = 2;
+        this.xMove = 500;
+        this.strength = level;
+        this.damage = level * 1;
+        this.xc = position.x;
         this.element = document.createElement("bullet");
         let game = document.getElementsByTagName("game")[0];
         game.appendChild(this.element);
@@ -192,23 +208,27 @@ class Bullet {
         return this.element.getBoundingClientRect();
     }
     move() {
-        if (this.x > 250) {
-            this.x = 110;
+        if (this.xMove < this.x - 200) {
+            this.xMove = this.x;
         }
-        this.x += this.speed;
-        this.y = 11;
-        this.element.style.transform = `translate(${this.x}px, ${this.y}px)`;
+        this.xMove -= this.speed;
+        this.element.style.transform = `translate(${this.xMove}px, ${this.y}px)`;
     }
 }
 class Tower {
-    constructor(towerLevel) {
+    constructor(level) {
         this.x = 0;
         this.y = 0;
-        this.damage = towerLevel * 5;
+        this.strength = level;
+        this.damage = level * 60;
         this.element = document.createElement("tower");
         let game = document.getElementsByTagName("game")[0];
         game.appendChild(this.element);
         this.element.style.filter = `hue-rotate(${this.strength * 90}deg)`;
+    }
+    getLocation() {
+        let position = this.element.getBoundingClientRect();
+        return position;
     }
 }
 //# sourceMappingURL=main.js.map

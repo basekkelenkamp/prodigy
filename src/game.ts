@@ -4,7 +4,7 @@ class Game {
 
     tower1 : Tower
 
-    bullet1 : Bullet
+    bullet : Bullet
 
     enemy1 : Enemy
     enemy2 : Enemy
@@ -17,14 +17,14 @@ class Game {
     enemies : Enemy[] = []
     enemiesAmount : number = 4
 
-
+    bulletCounter : number = 0
 
     constructor(){
         console.log("game created!")
 
 
         this.tower1 = new Tower(1)
-        this.bullet1 = new Bullet(1)
+        this.bullet = new Bullet(1, this.tower1.getLocation())
         this.castle = new Castle()
         this.tree   = new Tree()
 
@@ -52,7 +52,15 @@ class Game {
 
     gameLoop() {
 
-        this.bullet1.move()
+        this.bulletCounter++ 
+        if (this.bulletCounter > 60){
+            console.log("Fire!")
+            
+            this.bulletCounter = 0
+        }
+
+        // For loop om alle bullets te Move()
+        this.bullet.move()
 
         for (let i = 0; i < this.enemiesAmount; i++) {
             this.enemies[i].move()
@@ -74,16 +82,20 @@ class Game {
         }
 
         for (let i = 0; i < this.enemies.length; i++) {
-            let hitEnemy = this.checkCollision(this.enemies[i].getRectangle(), this.bullet1.getRectangle())
+            let hitEnemy = this.checkCollision(this.enemies[i].getRectangle(), this.bullet.getRectangle())
             
             if (hitEnemy) {
                 console.log("collision is: " + hitEnemy)
+                this.enemies[i].healthPoints -= this.bullet.damage
+                this.enemies[i].updateHP()
+
+                //reset bullet
+                this.bullet.xMove = this.bullet.x
+                this.bullet.y = 200
+
 
             }
         }
-
-        
-
 
         requestAnimationFrame(() => this.gameLoop())
     }
