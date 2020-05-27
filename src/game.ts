@@ -24,7 +24,7 @@ class Game {
 
 
         this.tower1 = new Tower(1)
-        this.bullet = new Bullet(1, this.tower1.getLocation())
+        this.bullet = new Bullet(1, this.tower1.getLocationX(), this.tower1.getLocationY())
         this.castle = new Castle()
         this.tree   = new Tree()
 
@@ -91,8 +91,6 @@ class Game {
 
                 //reset bullet
                 this.bullet.xMove = this.bullet.x
-                this.bullet.y = 200
-
 
             }
         }

@@ -4,25 +4,29 @@ class Bullet {
 
     strength : number
     damage : number
+    distance : number 
 
     attackSpeed : number
     speed : number = 2
 
     
-    //Locate middle tower
-    xc : number
-    yc : number
+    //X and Y from the bullet
+    x : number = 0
+    y : number = 0
 
-    x : number 
     xMove : number = 500
 
-    constructor(level : number, position: DOMRect){
+    constructor(level : number, positionX: number, positionY: number){
 
-        //Initialize enemy: || STRENGTH || HP || DAMAGE || SPEED ||
+        //Initialize bullet: || DAMAGE || SPEED || Distance ||
         this.strength = level
-        this.damage = level*1   
+        this.damage = level*1
+        this.distance = this.x - (level * 20 + 130)
 
-        this.xc = position.x
+        console.log(this.distance + "DISTANCE")
+
+        this.x = positionX
+        this.y = positionY
 
         //Create bullet
         this.element = document.createElement("bullet")
@@ -35,12 +39,12 @@ class Bullet {
     }
     
     move(){
-    if (this.xMove < this.x - 200) {
-        this.xMove = this.x 
+    if (this.x < this.distance) {
+        this.element.remove()
     } 
 
-    this.xMove -= this.speed
+    this.x -= this.speed
 
-    this.element.style.transform = `translate(${this.xMove}px, ${this.y}px)`
+    this.element.style.transform = `translate(${this.x}px, ${this.y}px)`
     }
 }

@@ -24,7 +24,7 @@ tree {
 }
 tower {
     background-image: url(../../src/assets/images/towers/basicTower.png);
-    width: 100%; height: 100%;
+    width: 130px; height: 143px;
 }
 
 castle {

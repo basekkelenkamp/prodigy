@@ -5,7 +5,7 @@ class Game {
         this.bulletCounter = 0;
         console.log("game created!");
         this.tower1 = new Tower(1);
-        this.bullet = new Bullet(1, this.tower1.getLocation());
+        this.bullet = new Bullet(1, this.tower1.getLocationX(), this.tower1.getLocationY());
         this.castle = new Castle();
         this.tree = new Tree();
         for (let i = 0; i < this.enemiesAmount; i++) {
@@ -47,7 +47,6 @@ class Game {
                 this.enemies[i].healthPoints -= this.bullet.damage;
                 this.enemies[i].updateHP();
                 this.bullet.xMove = this.bullet.x;
-                this.bullet.y = 200;
             }
         }
         requestAnimationFrame(() => this.gameLoop());
@@ -194,12 +193,17 @@ class Tree {
     }
 }
 class Bullet {
-    constructor(level, position) {
+    constructor(level, positionX, positionY) {
         this.speed = 2;
+        this.x = 0;
+        this.y = 0;
         this.xMove = 500;
         this.strength = level;
         this.damage = level * 1;
-        this.xc = position.x;
+        this.distance = this.x - (level * 20 + 130);
+        console.log(this.distance + "DISTANCE");
+        this.x = positionX;
+        this.y = positionY;
         this.element = document.createElement("bullet");
         let game = document.getElementsByTagName("game")[0];
         game.appendChild(this.element);
@@ -208,27 +212,34 @@ class Bullet {
         return this.element.getBoundingClientRect();
     }
     move() {
-        if (this.xMove < this.x - 200) {
-            this.xMove = this.x;
+        if (this.x < this.distance) {
+            this.element.remove();
         }
-        this.xMove -= this.speed;
-        this.element.style.transform = `translate(${this.xMove}px, ${this.y}px)`;
+        this.x -= this.speed;
+        this.element.style.transform = `translate(${this.x}px, ${this.y}px)`;
     }
 }
 class Tower {
     constructor(level) {
-        this.x = 0;
-        this.y = 0;
+        this.x = 1000;
+        this.y = 100;
         this.strength = level;
         this.damage = level * 60;
         this.element = document.createElement("tower");
         let game = document.getElementsByTagName("game")[0];
         game.appendChild(this.element);
         this.element.style.filter = `hue-rotate(${this.strength * 90}deg)`;
+        this.element.style.transform = `translate(${this.x}px, ${this.y}px)`;
     }
-    getLocation() {
+    getLocationY() {
         let position = this.element.getBoundingClientRect();
-        return position;
+        console.log(position.height * 0.5 + position.y);
+        return position.height * 0.5 + position.y;
+    }
+    getLocationX() {
+        let position = this.element.getBoundingClientRect();
+        console.log(position.width * 0.5 + position.x);
+        return position.width * 0.5 + position.x;
     }
 }
 //# sourceMappingURL=main.js.map

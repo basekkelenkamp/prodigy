@@ -8,8 +8,8 @@ class Tower {
 
     attackSpeed : number
 
-    x : number = 0
-    y : number = 0
+    x : number = 1000
+    y : number = 100
 
     constructor(level : number){
 
@@ -17,22 +17,28 @@ class Tower {
          this.strength = level
          this.damage = level*60
 
-         //Tower center 
-        
-        
-        //Create tower
-        this.element = document.createElement("tower")
-        let game = document.getElementsByTagName("game")[0]
-        game.appendChild(this.element)
-        this.element.style.filter = `hue-rotate(${this.strength*90}deg)`
+         
+         //Create tower
+         this.element = document.createElement("tower")
+         let game = document.getElementsByTagName("game")[0]
+         game.appendChild(this.element)
+         this.element.style.filter = `hue-rotate(${this.strength*90}deg)`
+         
+         //Tower move
+         this.element.style.transform = `translate(${this.x}px, ${this.y}px)`
+        }
+
+
+    public getLocationY(){
+        let position = this.element.getBoundingClientRect()
+        console.log(position.height*0.5 + position.y)
+        return position.height*0.5 + position.y
     }
 
-    public getLocation(){
-        // xc = rect1.top + rect1.height * 0.5;
-        // yc = rect1.top + rect1.height * 0.5;
+    public getLocationX(){
         let position = this.element.getBoundingClientRect()
-        // console.log(position.)
-        return position
+        console.log(position.width*0.5 + position.x)
+        return position.width*0.5 + position.x
     }
 
 
