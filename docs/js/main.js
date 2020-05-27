@@ -121,6 +121,25 @@ class Enemy {
         this.element.style.transform = `translate(${this.x}px, ${this.y}px)`;
     }
 }
+class Tree {
+    constructor() {
+        this.x = 0;
+        this.y = 300;
+        this.boom = 1;
+        this.element = document.createElement("tree");
+        let game = document.getElementsByTagName("game")[0];
+        game.appendChild(this.element);
+        this.element.style.transform = `translate(${this.x}px, ${this.y}px)`;
+        this.element.addEventListener("click", () => this.beweeg());
+    }
+    beweeg() {
+        this.boom++;
+        if (this.boom === 5) {
+            this.boom = 1;
+        }
+        this.element.style.backgroundImage = `url(../src/assets/images/scenery/Armored_Tree${this.boom}.png)`;
+    }
+}
 class Bullet {
     constructor(strength) {
         this.x = 110;
@@ -140,22 +159,6 @@ class Bullet {
         this.x += this.speed;
         this.y = 11;
         this.element.style.transform = `translate(${this.x}px, ${this.y}px)`;
-    }
-}
-class Tree {
-    constructor() {
-        this.boom = 1;
-        this.element = document.createElement("tree");
-        let game = document.getElementsByTagName("game")[0];
-        game.appendChild(this.element);
-        this.element.addEventListener("click", () => this.beweeg());
-    }
-    beweeg() {
-        this.boom++;
-        if (this.boom === 5) {
-            this.boom = 1;
-        }
-        this.element.style.backgroundImage = `url(../src/assets/images/scenery/Armored_Tree${this.boom}.png)`;
     }
 }
 class Tower {
