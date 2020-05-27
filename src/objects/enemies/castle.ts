@@ -27,25 +27,37 @@ class Castle {
         this.healthBar.innerHTML = `${this.healthPoints}HP`
         this.element.appendChild(this.healthBar)
 
-        this.element.addEventListener("click", () => this.break())
-
-
 
 
     }
 
-    break(){
-        
-        //als hp onder 1000 komt
-        this.castleImg ++
-        if (this.castleImg > 6) {
-            this.castleImg = 1
-        }
-        this.healthPoints -= 200
-        if (this.healthPoints < 0) {
-            this.healthPoints = 1000
-        }
+    getRectangle() {
+        return this.element.getBoundingClientRect()
+    }
+
+    updateHP(){
         this.healthBar.innerHTML = `${this.healthPoints}HP`
+        this.element.appendChild(this.healthBar)
+
+        if (this.healthPoints < 1000) {
+            this.castleImg = 2
+            if(this.healthPoints < 800) {
+                this.castleImg = 3
+                if(this.healthPoints < 600){
+                    this.castleImg = 4
+                    if(this.healthPoints < 400){
+                        this.castleImg = 5
+                        if(this.healthPoints < 200){
+                            this.castleImg = 6
+                            if(this.healthPoints < 0){
+                                this.healthPoints = 0
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         this.element.style.backgroundImage = `url(../src/assets/images/castle/castle${this.castleImg}.png)`;
 
     }

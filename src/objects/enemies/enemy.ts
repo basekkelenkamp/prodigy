@@ -13,6 +13,7 @@ class Enemy {
     x : number = 0
     y : number = 200
 
+
     constructor(level : number){
 
         console.log(`h:${innerHeight} w:${innerWidth}`)
@@ -20,7 +21,7 @@ class Enemy {
         //Initialize enemy: || STRENGTH || HP || DAMAGE || SPEED ||
         this.strength = level
         this.healthPoints = level*100
-        this.damage = level*5
+        this.damage = level*60
         this.xspeed = 0.75 / this.strength
         this.yspeed = 0
 
@@ -38,11 +39,15 @@ class Enemy {
 
     }
 
+    getRectangle() {
+        return this.element.getBoundingClientRect()
+    }
+
     move(){
 
         this.x += this.xspeed
         this.y += this.yspeed
-         
+                 
         switch (this.state) {
             case 0 : 
                 if (this.x > 300) {
@@ -76,26 +81,34 @@ class Enemy {
                     console.log("move right")
                     this.xspeed = 0.75 / this.strength
                     this.yspeed = 0
-                    this.state = 4
-                break;
+                    // this.state = 4
+                    break;
                 }
-    
-            case 4 : 
+                
+                case 4 : 
                 if (this.x > innerWidth - 260){
-                console.log("reset")
+                    console.log("reset")
                 this.x = 0
                 this.y = 200
                 this.state = 0
-                }
-       
+            }
+            
         }
-    
+        
 
 
-
+        
         
         this.element.style.transform = `translate(${this.x}px, ${this.y}px)`
 
     }
 
+    updateHP(){
+        this.healthBar.innerHTML = `${this.healthPoints}HP`
+        this.element.appendChild(this.healthBar)
+        if (this.healthPoints < 1){
+            this.element.remove()
+        }
+        
+    }
 }
