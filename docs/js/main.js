@@ -1,11 +1,11 @@
 class Game {
     constructor() {
+        this.bullets = [];
         this.enemies = [];
         this.enemiesAmount = 4;
         this.bulletCounter = 0;
         console.log("game created!");
-        this.tower1 = new Tower(1);
-        this.bullet = new Bullet(1, this.tower1.getLocationX(), this.tower1.getLocationY());
+        this.tower1 = new Tower(1, this);
         this.castle = new Castle();
         this.tree = new Tree();
         for (let i = 0; i < this.enemiesAmount; i++) {
@@ -20,12 +20,11 @@ class Game {
             b.top <= a.bottom);
     }
     gameLoop() {
-        this.bulletCounter++;
-        if (this.bulletCounter > 60) {
-            console.log("Fire!");
-            this.bulletCounter = 0;
+        this.tower1.updateTower();
+        this.tower1.y += 2;
+        for (const bullet of this.bullets) {
+            bullet.move();
         }
-        this.bullet.move();
         for (let i = 0; i < this.enemiesAmount; i++) {
             this.enemies[i].move();
         }
@@ -40,13 +39,15 @@ class Game {
                 this.enemies[i].state = 0;
             }
         }
-        for (let i = 0; i < this.enemies.length; i++) {
-            let hitEnemy = this.checkCollision(this.enemies[i].getRectangle(), this.bullet.getRectangle());
-            if (hitEnemy) {
-                console.log("collision is: " + hitEnemy);
-                this.enemies[i].healthPoints -= this.bullet.damage;
-                this.enemies[i].updateHP();
-                this.bullet.xMove = this.bullet.x;
+        for (const bullet of this.bullets) {
+            for (let i = 0; i < this.enemies.length; i++) {
+                let hitEnemy = this.checkCollision(this.enemies[i].getRectangle(), bullet.getRectangle());
+                if (hitEnemy) {
+                    console.log("collision is: " + hitEnemy);
+                    this.enemies[i].healthPoints -= bullet.damage;
+                    this.enemies[i].updateHP();
+                    bullet.removeBullet();
+                }
             }
         }
         requestAnimationFrame(() => this.gameLoop());
@@ -193,20 +194,22 @@ class Tree {
     }
 }
 class Bullet {
-    constructor(level, positionX, positionY) {
+    constructor(level, positionX, positionY, GameInstance) {
         this.speed = 2;
         this.x = 0;
         this.y = 0;
         this.xMove = 500;
-        this.strength = level;
-        this.damage = level * 1;
-        this.distance = this.x - (level * 20 + 130);
-        console.log(this.distance + "DISTANCE");
+        this.gameInstance = this.gameInstance;
         this.x = positionX;
         this.y = positionY;
+        this.strength = level;
+        this.damage = (level * 10 + 5);
+        this.distance = this.x - (level * 20 + 180);
+        console.log(this.distance + "DISTANCE");
         this.element = document.createElement("bullet");
         let game = document.getElementsByTagName("game")[0];
         game.appendChild(this.element);
+        this.element.style.filter = `hue-rotate(${0}deg)`;
     }
     getRectangle() {
         return this.element.getBoundingClientRect();
@@ -218,18 +221,24 @@ class Bullet {
         this.x -= this.speed;
         this.element.style.transform = `translate(${this.x}px, ${this.y}px)`;
     }
+    removeBullet() {
+        this.element.remove();
+    }
 }
 class Tower {
-    constructor(level) {
-        this.x = 1000;
-        this.y = 100;
+    constructor(level, gameInstance) {
+        this.counter = 0;
+        this.x = 500;
+        this.y = 400;
         this.strength = level;
         this.damage = level * 60;
+        this.gameInstance = gameInstance;
         this.element = document.createElement("tower");
         let game = document.getElementsByTagName("game")[0];
         game.appendChild(this.element);
         this.element.style.filter = `hue-rotate(${this.strength * 90}deg)`;
         this.element.style.transform = `translate(${this.x}px, ${this.y}px)`;
+        this.shoot();
     }
     getLocationY() {
         let position = this.element.getBoundingClientRect();
@@ -240,6 +249,17 @@ class Tower {
         let position = this.element.getBoundingClientRect();
         console.log(position.width * 0.5 + position.x);
         return position.width * 0.5 + position.x;
+    }
+    shoot() {
+        let bullet = new Bullet(1, this.getLocationX(), this.getLocationY(), this.gameInstance);
+        this.gameInstance.bullets.push(bullet);
+    }
+    updateTower() {
+        this.counter++;
+        if (this.counter > 60) {
+            this.shoot();
+            this.counter = 0;
+        }
     }
 }
 //# sourceMappingURL=main.js.map
