@@ -82,25 +82,33 @@ class Enemy {
                     this.xspeed = 0.75 / this.strength
                     this.yspeed = 0
                     // this.state = 4
-                break;
+                    break;
                 }
-    
-            case 4 : 
+                
+                case 4 : 
                 if (this.x > innerWidth - 260){
-                console.log("reset")
+                    console.log("reset")
                 this.x = 0
                 this.y = 200
                 this.state = 0
-                }
-       
+            }
+            
         }
-    
+        
 
 
-
+        
         
         this.element.style.transform = `translate(${this.x}px, ${this.y}px)`
 
     }
 
+    updateHP(){
+        this.healthBar.innerHTML = `${this.healthPoints}HP`
+        this.element.appendChild(this.healthBar)
+        if (this.healthPoints < 1){
+            this.element.remove()
+        }
+        
+    }
 }
