@@ -20,28 +20,21 @@ class Game {
     bulletCounter : number = 0
 
     constructor(){
-        console.log("game created!")
 
-
+        //Creates Towers || Castle || Tree || Enemies
         this.tower1 = new Tower(1, this)
-        // this.bullet = new Bullet(1, this.tower1.getLocationX(), this.tower1.getLocationY())
         this.castle = new Castle()
         this.tree   = new Tree()
-
-        // this.enemy1 = new Enemy(1)
-        // this.enemy2 = new Enemy(2)
-        // this.enemy3 = new Enemy(3)
-        // this.enemy4 = new Enemy(5)
-        // this.enemy5 = new Enemy(0.2)
-
 
         for (let i = 0; i < this.enemiesAmount; i++) {
             this.enemies.push(new Enemy(i+1))            
         }
 
+        //Starts gameLoop()
         this.gameLoop()
     }
 
+    //Checks collision between two objects
     checkCollision(a: ClientRect, b: ClientRect) {
         return (a.left <= b.right &&
             b.left <= a.right &&
@@ -49,25 +42,27 @@ class Game {
             b.top <= a.bottom)
         }
 
-
+    //Animation loop of 60 FPS
     gameLoop() {
 
+        //Updates tower
         this.tower1.updateTower()
         
-        // For loop om alle bullets te moven
+        //For loop to move bullets
         for (const bullet of this.bullets) {
             bullet.move()
         }
         
-
-
+        //For loop to move enemies
         for (let i = 0; i < this.enemiesAmount; i++) {
             this.enemies[i].move()
         }
     
+        //Creates collision between enemies and the castle
         for (let i = 0; i < this.enemies.length; i++) {
             let hit = this.checkCollision(this.enemies[i].getRectangle(), this.castle.getRectangle())
             
+            //Gives DMG to tower when hit by enemy
             if (hit) {
                 console.log("collision is: " + hit)
                 this.castle.healthPoints -= this.enemies[i].damage
@@ -80,24 +75,28 @@ class Game {
             }
         }
 
+        //Creates collision between enemies and bullets
         for (const bullet of this.bullets) {
             
-        for (let i = 0; i < this.enemies.length; i++) {
-            let hitEnemy = this.checkCollision(this.enemies[i].getRectangle(), bullet.getRectangle())
-            
-            if (hitEnemy) {
-                console.log("collision is: " + hitEnemy)
-                this.enemies[i].healthPoints -= bullet.damage
-                this.enemies[i].updateHP()
+            for (let i = 0; i < this.enemies.length; i++) {
+                let hitEnemy = this.checkCollision(this.enemies[i].getRectangle(), bullet.getRectangle())
+                
+                //Gives DMG to enemies when hit by bullets
+                if (hitEnemy) {
+                    console.log("collision is: " + hitEnemy)
+                    this.enemies[i].healthPoints -= bullet.damage
+                    this.enemies[i].updateHP()
 
-                //reset bullet
-                bullet.removeBullet()
-
+                    //Removes bullet
+                    bullet.removeBullet()
+                }
             }
         }
-    }
-        requestAnimationFrame(() => this.gameLoop())
+    
+    //Game loop initialisation
+    requestAnimationFrame(() => this.gameLoop())
     }
 }
 
+//Load game
 window.addEventListener("load", () => new Game())

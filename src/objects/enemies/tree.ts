@@ -15,6 +15,7 @@ class Tree {
         this.element.addEventListener("click", () => this.beweeg())
     }
 
+    //Moves the tree
     beweeg() {
         this.boom++
         if (this.boom === 5) {
