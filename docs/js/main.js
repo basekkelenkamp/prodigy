@@ -21,7 +21,6 @@ class Game {
     }
     gameLoop() {
         this.tower1.updateTower();
-        this.tower1.y += 2;
         for (const bullet of this.bullets) {
             bullet.move();
         }

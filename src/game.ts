@@ -53,7 +53,6 @@ class Game {
     gameLoop() {
 
         this.tower1.updateTower()
-        this.tower1.y += 2
         
         // For loop om alle bullets te moven
         for (const bullet of this.bullets) {
