@@ -227,14 +227,21 @@ class Tower {
         this.counter = 0;
         this.x = 500;
         this.y = 400;
+        this.mouseX = 0;
+        this.mouseY = 0;
         this.strength = level;
         this.damage = level * 60;
         this.gameInstance = gameInstance;
         this.element = document.createElement("tower");
         let game = document.getElementsByTagName("game")[0];
+        this.element.id = "tower";
+        this.element.draggable = true;
         game.appendChild(this.element);
         this.element.style.filter = `hue-rotate(${this.strength * 90}deg)`;
         this.element.style.transform = `translate(${this.x}px, ${this.y}px)`;
+        this.element.addEventListener('mousemove', () => this.hoverTower(event));
+        this.element.addEventListener('mouseout', () => this.hoverTowerClear(event));
+        this.element.addEventListener('dragend', () => this.dropTower(event));
         this.shoot();
     }
     getLocationY() {
@@ -257,6 +264,18 @@ class Tower {
             this.shoot();
             this.counter = 0;
         }
+    }
+    hoverTower(e) {
+        this.element.style.border = "groove";
+        console.log(e);
+    }
+    hoverTowerClear(e) {
+        this.element.style.border = "";
+    }
+    dropTower(e) {
+        this.mouseX = e.clientX;
+        this.mouseY = e.clientY;
+        this.element.style.transform = `translate(${this.mouseX}px, ${this.mouseY}px)`;
     }
 }
 //# sourceMappingURL=main.js.map

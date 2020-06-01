@@ -13,6 +13,9 @@ class Tower {
     x : number = 500
     y : number = 400
 
+    mouseX : number = 0
+    mouseY : number = 0
+
     constructor(level : number, gameInstance : Game){
 
          //Initialize enemy: || STRENGTH || HP || DAMAGE || SPEED ||
@@ -24,11 +27,21 @@ class Tower {
          //Create tower
          this.element = document.createElement("tower")
          let game = document.getElementsByTagName("game")[0]
+         this.element.id = "tower"
+         this.element.draggable = true
          game.appendChild(this.element)
          this.element.style.filter = `hue-rotate(${this.strength*90}deg)`
          
          //Set tower position
          this.element.style.transform = `translate(${this.x}px, ${this.y}px)`
+
+         //Eventlisteners
+         this.element.addEventListener('mousemove', ()=> this.hoverTower(event))
+         this.element.addEventListener('mouseout', ()=> this.hoverTowerClear(event))
+
+        //  this.element.addEventListener('dragstart', ()=> this.moveTower(event))
+         this.element.addEventListener('dragend', ()=> this.dropTower(event))        
+
 
          //Tower shoots bullet
          this.shoot()
@@ -60,10 +73,26 @@ class Tower {
             if(this.counter > 60){
                 this.shoot()
                 this.counter = 0
-            }
-            //DRIVEBY TOWER 
-            // this.element.style.transform = `translate(${this.x -=1}px, ${this.y += 0.1}px)`
+            }            
+            
+        }
 
+        //Create highlight box on hover
+        hoverTower(e){
+            this.element.style.border = "groove"
+            console.log(e)
+        }
+
+        //Removes highlight box on hover
+        hoverTowerClear(e){
+            this.element.style.border = ""
+        }
+
+        //Drops Tower on new position
+        dropTower(e){
+            this.mouseX = e.clientX
+            this.mouseY = e.clientY
+            this.element.style.transform = `translate(${this.mouseX}px, ${this.mouseY}px)`
         }
 
 
