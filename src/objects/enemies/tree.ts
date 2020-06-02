@@ -21,7 +21,7 @@ class Tree {
         if (this.boom === 5) {
             this.boom = 1;
         }
-        this.element.style.backgroundImage = `url(/docs/images/scenery/Armored_Tree${this.boom}.png)`;
+        this.element.style.backgroundImage = `url(../images/scenery/Armored_Tree${this.boom}.png)`;
     }
 
 }
