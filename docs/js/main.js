@@ -92,7 +92,7 @@ class Castle {
                 }
             }
         }
-        this.element.style.backgroundImage = `url(../images/castle/castle${this.castleImg}.png)`;
+        this.element.style.backgroundImage = `url(images/castle/castle${this.castleImg}.png)`;
     }
 }
 class Enemy {
@@ -187,16 +187,16 @@ class Tree {
         if (this.boom === 5) {
             this.boom = 1;
         }
-        this.element.style.backgroundImage = `url(../images/scenery/Armored_Tree${this.boom}.png)`;
+        this.element.style.backgroundImage = `url(images/scenery/Armored_Tree${this.boom}.png)`;
     }
 }
 class Bullet {
-    constructor(level, positionX, positionY, GameInstance) {
+    constructor(level, positionX, positionY, gameInstance) {
         this.speed = 2;
         this.x = 0;
         this.y = 0;
         this.xMove = 500;
-        this.gameInstance = this.gameInstance;
+        this.gameInstance = gameInstance;
         this.x = positionX;
         this.y = positionY;
         this.strength = level;
@@ -213,13 +213,16 @@ class Bullet {
     }
     move() {
         if (this.x < this.distance) {
-            this.element.remove();
+            this.removeBullet();
         }
         this.x -= this.speed;
         this.element.style.transform = `translate(${this.x}px, ${this.y}px)`;
     }
     removeBullet() {
         this.element.remove();
+        let i = this.gameInstance.bullets.indexOf(this);
+        this.gameInstance.bullets.splice(i, 1);
+        console.log(this.gameInstance.bullets.length);
     }
 }
 class Tower {

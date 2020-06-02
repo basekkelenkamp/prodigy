@@ -17,10 +17,10 @@ class Bullet {
 
     xMove : number = 500
 
-    constructor(level : number, positionX: number, positionY: number, GameInstance : Game){
+    constructor(level : number, positionX: number, positionY: number, gameInstance : Game){
 
         //Set bullet to center of tower
-        this.gameInstance = this.gameInstance
+        this.gameInstance = gameInstance
         this.x = positionX
         this.y = positionY
         
@@ -48,7 +48,7 @@ class Bullet {
     //Tower shoots bullets and removes them when hit or runs out of distance
     move(){
     if (this.x < this.distance) {
-        this.element.remove()
+        this.removeBullet()
     } 
 
     
@@ -59,5 +59,10 @@ class Bullet {
 
     removeBullet(){
         this.element.remove()
+
+        let i = this.gameInstance.bullets.indexOf(this)
+        this.gameInstance.bullets.splice(i, 1)
+        console.log(this.gameInstance.bullets.length)
+
     }
 }

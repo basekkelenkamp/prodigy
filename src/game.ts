@@ -6,12 +6,7 @@ class Game {
 
     bullets : Bullet[] = []
 
-    enemy1 : Enemy
-    enemy2 : Enemy
-    enemy3 : Enemy
     tree   : Tree
-    enemy4 : Enemy
-    enemy5 : Enemy
     castle : Castle
 
     enemies : Enemy[] = []
