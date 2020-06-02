@@ -92,7 +92,7 @@ class Castle {
                 }
             }
         }
-        this.element.style.backgroundImage = `url(../src/assets/images/castle/castle${this.castleImg}.png)`;
+        this.element.style.backgroundImage = `url(/docs/images/castle/castle${this.castleImg}.png)`;
     }
 }
 class Enemy {
@@ -187,7 +187,7 @@ class Tree {
         if (this.boom === 5) {
             this.boom = 1;
         }
-        this.element.style.backgroundImage = `url(../src/assets/images/scenery/Armored_Tree${this.boom}.png)`;
+        this.element.style.backgroundImage = `url(/docs/images/scenery/Armored_Tree${this.boom}.png)`;
     }
 }
 class Bullet {

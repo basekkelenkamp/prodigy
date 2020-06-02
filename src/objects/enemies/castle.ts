@@ -57,7 +57,7 @@ class Castle {
             }
         }
 
-        this.element.style.backgroundImage = `url(../src/assets/images/castle/castle${this.castleImg}.png)`;
+        this.element.style.backgroundImage = `url(/docs/images/castle/castle${this.castleImg}.png)`;
 
     }
 

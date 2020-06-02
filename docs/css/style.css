@@ -14,21 +14,21 @@ game * {
 }
 
 enemy {
-    background-image: url(../../src/assets/images/enemies/monster_placeholder.png);
+    background-image: url(/docs/images/enemies/monster_placeholder.png);
     width:130px; height: 110px;
 }
 
 tree {
-    background-image: url(../../src/assets/images/scenery/Armored_Tree1.png);
+    background-image: url(/docs/images/scenery/Armored_Tree1.png);
     width: 256px; height: 256px;
 }
 tower {
-    background-image: url(../../src/assets/images/towers/basicTower.png);
+    background-image: url(/docs/images/towers/basicTower.png);
     width: 130px; height: 143px;
 }
 
 castle {
-    background-image: url(../../src/assets/images/castle/castle1.png);
+    background-image: url(/docs/images/castle/castle1.png);
     width: 260px; height: 220px;
 }
 
