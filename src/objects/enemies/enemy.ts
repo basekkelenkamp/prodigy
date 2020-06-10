@@ -2,6 +2,7 @@ class Enemy {
 
     element : HTMLElement
     healthBar : HTMLElement
+    fightInstance : Fight
 
     strength : number
     healthPoints : number
@@ -14,7 +15,9 @@ class Enemy {
     y : number = 200
 
 
-    constructor(level : number){
+    constructor(level : number, fightInstance : Fight){
+
+        this.fightInstance = fightInstance
 
         //Initialize enemy: || STRENGTH || HP || DAMAGE || SPEED ||
         this.strength = level
@@ -49,7 +52,7 @@ class Enemy {
                  
         switch (this.state) {
             case 0 : 
-                if (this.x > 300) {
+                if (this.x > 350) {
                     console.log("move down")
                     this.yspeed = 0.75 / this.strength
                     this.xspeed = 0
@@ -67,7 +70,7 @@ class Enemy {
                 break;
 
             case 2 :
-                if (this.x > 1100){
+                if (this.x > 1320){
                     console.log("move up")
                     this.yspeed = -0.75 / this.strength
                     this.xspeed = 0
@@ -76,7 +79,7 @@ class Enemy {
                 }
 
             case 3 :
-                if (this.y < 400){
+                if (this.y < 460){
                     console.log("move right")
                     this.xspeed = 0.75 / this.strength
                     this.yspeed = 0
@@ -103,6 +106,8 @@ class Enemy {
         this.element.appendChild(this.healthBar)
         if (this.healthPoints < 1){
             this.element.remove()
+            this.fightInstance.removeEnemy(this)
+        
         }
         
     }

@@ -1,50 +1,175 @@
-class Game {
-    constructor() {
-        this.bullets = [];
+class Tower {
+    constructor(level, gameInstance) {
+        this.counter = 0;
+        this.x = 500;
+        this.y = 400;
+        this.mouseX = 0;
+        this.mouseY = 0;
+        this.strength = level;
+        this.damage = level * 60;
+        this.gameInstance = gameInstance;
+        this.element = document.createElement("tower");
+        let game = document.getElementsByTagName("game")[0];
+        this.element.id = "tower";
+        this.element.draggable = true;
+        game.appendChild(this.element);
+        this.element.style.filter = `hue-rotate(${this.strength * 90}deg)`;
+        this.element.style.transform = `translate(${this.x}px, ${this.y}px)`;
+        this.element.addEventListener('mousemove', () => this.hoverTower(event));
+        this.element.addEventListener('mouseout', () => this.hoverTowerClear(event));
+        this.shoot();
+    }
+    getLocationY() {
+        let position = this.element.getBoundingClientRect();
+        console.log(position.height * 0.5 + position.y);
+        return position.height * 0.5 + position.y;
+    }
+    getLocationX() {
+        let position = this.element.getBoundingClientRect();
+        console.log(position.width * 0.5 + position.x);
+        return position.width * 0.5 + position.x;
+    }
+    shoot() {
+        let bullet = new Bullet(1, this.getLocationX(), this.getLocationY(), this.gameInstance);
+        this.gameInstance.Bullets.push(bullet);
+    }
+    updateTower() {
+        this.counter++;
+        if (this.counter > 60) {
+            this.shoot();
+            this.counter = 0;
+        }
+    }
+    hoverTower(e) {
+        this.element.style.border = "groove";
+        console.log(e);
+    }
+    hoverTowerClear(e) {
+        this.element.style.border = "";
+    }
+    dropTower(e) {
+        this.mouseX = e.clientX;
+        this.mouseY = e.clientY;
+        this.element.style.transform = `translate(${this.mouseX}px, ${this.mouseY}px)`;
+    }
+    addDragfunction() {
+        this.element.addEventListener('dragend', () => this.dropTower(event));
+    }
+    removeDragfunction() {
+        this.element.removeEventListener('dragend', () => this.dropTower(event));
+    }
+}
+class Build {
+    constructor(level, gameInstance) {
+        this.counter = 0;
+        this.x = 500;
+        this.y = 400;
+        this.mouseX = 0;
+        this.mouseY = 0;
+        this.gameInstance = gameInstance;
+        gameInstance.tower1.addDragfunction();
+        console.log("build phase");
+        this.button = document.createElement("button");
+        let game = document.getElementsByTagName("game")[0];
+        this.button.innerHTML = "Ready to Fight!";
+        game.appendChild(this.button);
+        this.button.addEventListener("click", () => this.buttonClickHandler());
+    }
+    buttonClickHandler() {
+        this.gameInstance.gamestate = "fight";
+    }
+    updateBuild() {
+        console.log("build phase");
+    }
+}
+class Fight {
+    constructor(level, gameInstance) {
         this.enemies = [];
         this.enemiesAmount = 4;
         this.bulletCounter = 0;
+        this.gameInstance = gameInstance;
+        this.gameInstance.tower1.removeDragfunction();
+        console.log("attack phase");
+        for (let i = 0; i < this.enemiesAmount; i++) {
+            this.enemies.push(new Enemy(i + 1, this));
+        }
+    }
+    removeEnemy(enemy) {
+        let i = this.enemies.indexOf(enemy);
+        this.enemies.splice(i, 1);
+        console.log(this.enemies.length);
+    }
+    updateFight() {
+        for (const bullet of this.gameInstance.Bullets) {
+            bullet.move();
+        }
+        for (let i = 0; i < this.enemiesAmount; i++) {
+            this.enemies[i].move();
+        }
+    }
+}
+class Game {
+    constructor() {
+        this.bullets = [];
+        this.bulletCounter = 0;
+        this._gamestate = "build";
+        this.previousGamestate = "fight";
         this.tower1 = new Tower(1, this);
         this.castle = new Castle();
         this.tree = new Tree();
-        for (let i = 0; i < this.enemiesAmount; i++) {
-            this.enemies.push(new Enemy(i + 1));
-        }
         this.gameLoop();
     }
+    get Bullets() {
+        return this.bullets;
+    }
+    set gamestate(gamestate) { this._gamestate = gamestate; }
     checkCollision(a, b) {
         return (a.left <= b.right &&
             b.left <= a.right &&
             a.top <= b.bottom &&
             b.top <= a.bottom);
     }
+    removeBullet(bullet) {
+        let i = this.Bullets.indexOf(bullet);
+        this.Bullets.splice(i, 1);
+        console.log(this.Bullets.length);
+    }
     gameLoop() {
-        this.tower1.updateTower();
-        for (const bullet of this.bullets) {
-            bullet.move();
+        if (this._gamestate === "build" && this.previousGamestate == "fight") {
+            this.buildPhase = new Build(1, this);
+            this.previousGamestate = this._gamestate;
         }
-        for (let i = 0; i < this.enemiesAmount; i++) {
-            this.enemies[i].move();
+        if (this._gamestate == 'fight' && this.previousGamestate == 'build') {
+            this.fightPhase = new Fight(1, this);
+            this.previousGamestate = this._gamestate;
         }
-        for (let i = 0; i < this.enemies.length; i++) {
-            let hit = this.checkCollision(this.enemies[i].getRectangle(), this.castle.getRectangle());
-            if (hit) {
-                console.log("collision is: " + hit);
-                this.castle.healthPoints -= this.enemies[i].damage;
-                this.castle.updateHP();
-                this.enemies[i].x = 0;
-                this.enemies[i].y = 200;
-                this.enemies[i].state = 0;
+        if (this._gamestate === "build") {
+            this.buildPhase.updateBuild();
+        }
+        else {
+        }
+        if (this._gamestate === "fight") {
+            this.fightPhase.updateFight();
+            for (let i = 0; i < this.fightPhase.enemies.length; i++) {
+                let hit = this.checkCollision(this.fightPhase.enemies[i].getRectangle(), this.castle.getRectangle());
+                if (hit) {
+                    console.log("collision is: " + hit);
+                    this.castle.healthPoints -= this.fightPhase.enemies[i].damage;
+                    this.castle.updateHP();
+                    this.fightPhase.enemies[i].x = 0;
+                    this.fightPhase.enemies[i].y = 200;
+                    this.fightPhase.enemies[i].state = 0;
+                }
             }
-        }
-        for (const bullet of this.bullets) {
-            for (let i = 0; i < this.enemies.length; i++) {
-                let hitEnemy = this.checkCollision(this.enemies[i].getRectangle(), bullet.getRectangle());
-                if (hitEnemy) {
-                    console.log("collision is: " + hitEnemy);
-                    this.enemies[i].healthPoints -= bullet.damage;
-                    this.enemies[i].updateHP();
-                    bullet.removeBullet();
+            for (const bullet of this.bullets) {
+                for (let i = 0; i < this.fightPhase.enemies.length; i++) {
+                    let hitEnemy = this.checkCollision(this.fightPhase.enemies[i].getRectangle(), bullet.getRectangle());
+                    if (hitEnemy) {
+                        console.log("collision is: " + hitEnemy);
+                        this.fightPhase.enemies[i].healthPoints -= bullet.damage;
+                        this.fightPhase.enemies[i].updateHP();
+                        bullet.removeBullet();
+                    }
                 }
             }
         }
@@ -61,8 +186,8 @@ class Castle {
         this.element = document.createElement("castle");
         let game = document.getElementsByTagName("game")[0];
         game.appendChild(this.element);
-        this.x = innerWidth - this.element.clientWidth;
-        this.y = 300;
+        this.x = 1660;
+        this.y = 390;
         this.element.style.transform = `translate(${this.x}px, ${this.y}px)`;
         this.healthBar = document.createElement("healthbar");
         this.healthBar.innerHTML = `${this.healthPoints}HP`;
@@ -96,12 +221,13 @@ class Castle {
     }
 }
 class Enemy {
-    constructor(level) {
+    constructor(level, fightInstance) {
         this.xspeed = 0;
         this.yspeed = 0;
         this.state = 0;
         this.x = 0;
         this.y = 200;
+        this.fightInstance = fightInstance;
         this.strength = level;
         this.healthPoints = level * 100;
         this.damage = level * 60;
@@ -123,7 +249,7 @@ class Enemy {
         this.y += this.yspeed;
         switch (this.state) {
             case 0:
-                if (this.x > 300) {
+                if (this.x > 350) {
                     console.log("move down");
                     this.yspeed = 0.75 / this.strength;
                     this.xspeed = 0;
@@ -139,7 +265,7 @@ class Enemy {
                 }
                 break;
             case 2:
-                if (this.x > 1100) {
+                if (this.x > 1320) {
                     console.log("move up");
                     this.yspeed = -0.75 / this.strength;
                     this.xspeed = 0;
@@ -147,7 +273,7 @@ class Enemy {
                     break;
                 }
             case 3:
-                if (this.y < 400) {
+                if (this.y < 460) {
                     console.log("move right");
                     this.xspeed = 0.75 / this.strength;
                     this.yspeed = 0;
@@ -168,6 +294,7 @@ class Enemy {
         this.element.appendChild(this.healthBar);
         if (this.healthPoints < 1) {
             this.element.remove();
+            this.fightInstance.removeEnemy(this);
         }
     }
 }
@@ -219,66 +346,8 @@ class Bullet {
         this.element.style.transform = `translate(${this.x}px, ${this.y}px)`;
     }
     removeBullet() {
+        this.gameInstance.removeBullet(this);
         this.element.remove();
-        let i = this.gameInstance.bullets.indexOf(this);
-        this.gameInstance.bullets.splice(i, 1);
-        console.log(this.gameInstance.bullets.length);
-    }
-}
-class Tower {
-    constructor(level, gameInstance) {
-        this.counter = 0;
-        this.x = 500;
-        this.y = 400;
-        this.mouseX = 0;
-        this.mouseY = 0;
-        this.strength = level;
-        this.damage = level * 60;
-        this.gameInstance = gameInstance;
-        this.element = document.createElement("tower");
-        let game = document.getElementsByTagName("game")[0];
-        this.element.id = "tower";
-        this.element.draggable = true;
-        game.appendChild(this.element);
-        this.element.style.filter = `hue-rotate(${this.strength * 90}deg)`;
-        this.element.style.transform = `translate(${this.x}px, ${this.y}px)`;
-        this.element.addEventListener('mousemove', () => this.hoverTower(event));
-        this.element.addEventListener('mouseout', () => this.hoverTowerClear(event));
-        this.element.addEventListener('dragend', () => this.dropTower(event));
-        this.shoot();
-    }
-    getLocationY() {
-        let position = this.element.getBoundingClientRect();
-        console.log(position.height * 0.5 + position.y);
-        return position.height * 0.5 + position.y;
-    }
-    getLocationX() {
-        let position = this.element.getBoundingClientRect();
-        console.log(position.width * 0.5 + position.x);
-        return position.width * 0.5 + position.x;
-    }
-    shoot() {
-        let bullet = new Bullet(1, this.getLocationX(), this.getLocationY(), this.gameInstance);
-        this.gameInstance.bullets.push(bullet);
-    }
-    updateTower() {
-        this.counter++;
-        if (this.counter > 60) {
-            this.shoot();
-            this.counter = 0;
-        }
-    }
-    hoverTower(e) {
-        this.element.style.border = "groove";
-        console.log(e);
-    }
-    hoverTowerClear(e) {
-        this.element.style.border = "";
-    }
-    dropTower(e) {
-        this.mouseX = e.clientX;
-        this.mouseY = e.clientY;
-        this.element.style.transform = `translate(${this.mouseX}px, ${this.mouseY}px)`;
     }
 }
 //# sourceMappingURL=main.js.map
