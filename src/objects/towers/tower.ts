@@ -40,7 +40,7 @@ class Tower {
          this.element.addEventListener('mouseout', ()=> this.hoverTowerClear(event))
 
         //  this.element.addEventListener('dragstart', ()=> this.moveTower(event))
-         this.element.addEventListener('dragend', ()=> this.dropTower(event))        
+        //  this.element.addEventListener('dragend', ()=> this.gameInstance.buildPhase.dropTower(event))        
 
 
          //Tower shoots bullet
@@ -64,7 +64,7 @@ class Tower {
         //Function of tower shooting
         shoot(){
             let bullet : Bullet = new Bullet(1, this.getLocationX(), this.getLocationY(), this.gameInstance)
-            this.gameInstance.bullets.push(bullet)
+            this.gameInstance.Bullets.push(bullet)
         }
 
         //Tower shoots every second
@@ -74,7 +74,6 @@ class Tower {
                 this.shoot()
                 this.counter = 0
             }            
-            
         }
 
         //Create highlight box on hover
@@ -96,4 +95,11 @@ class Tower {
         }
 
 
+        addDragfunction(){
+            this.element.addEventListener('dragend', ()=> this.dropTower(event)) 
+        }
+
+        removeDragfunction(){
+            this.element.removeEventListener('dragend', ()=> this.dropTower(event)) 
+        }
 }
