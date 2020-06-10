@@ -18,8 +18,8 @@ class Castle {
         game.appendChild(this.element)
 
         //Place castle
-        this.x = innerWidth - this.element.clientWidth
-        this.y = 300
+        this.x = 1660
+        this.y = 380
         this.element.style.transform = `translate(${this.x}px, ${this.y}px)`
 
         //Create HP bar
