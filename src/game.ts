@@ -2,16 +2,14 @@
 
 class Game {
 
-    tower1 : Tower
-
-    bullets : Bullet[] = []
-
     tree   : Tree
     castle : Castle
-
+    tower1 : Tower
+    
     enemies : Enemy[] = []
+    bullets : Bullet[] = []
+    
     enemiesAmount : number = 4
-
     bulletCounter : number = 0
 
     constructor(){

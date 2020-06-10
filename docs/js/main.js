@@ -1,7 +1,7 @@
 class Game {
     constructor() {
-        this.bullets = [];
         this.enemies = [];
+        this.bullets = [];
         this.enemiesAmount = 4;
         this.bulletCounter = 0;
         this.tower1 = new Tower(1, this);
@@ -222,7 +222,6 @@ class Bullet {
         this.element.remove();
         let i = this.gameInstance.bullets.indexOf(this);
         this.gameInstance.bullets.splice(i, 1);
-        console.log(this.gameInstance.bullets.length);
     }
 }
 class Tower {

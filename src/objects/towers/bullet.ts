@@ -62,7 +62,5 @@ class Bullet {
 
         let i = this.gameInstance.bullets.indexOf(this)
         this.gameInstance.bullets.splice(i, 1)
-        console.log(this.gameInstance.bullets.length)
-
     }
 }
