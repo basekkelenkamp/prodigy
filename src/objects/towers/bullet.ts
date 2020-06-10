@@ -58,9 +58,13 @@ class Bullet {
     }
 
     removeBullet(){
+        this.gameInstance.removeBullet(this)
         this.element.remove()
 
-        let i = this.gameInstance.bullets.indexOf(this)
-        this.gameInstance.bullets.splice(i, 1)
+
+        // let i = this.gameInstance.Bullets.indexOf(this)
+        // this.gameInstance.Bullets.splice(i, 1)
+        // console.log(this.gameInstance.Bullets.length)
+
     }
 }
