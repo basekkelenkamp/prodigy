@@ -7,12 +7,13 @@ class Game {
     buildPhase : Build
     fightPhase : Fight
     waveLevel : number = 3
+    phase : HTMLElement
+    waveCounter : number = 1
 
-    tower1 : Tower
+    towers : Tower[] = []
 
     private bullets : Bullet[] = []
 
-    tree   : Tree
     castle : Castle
 
 
@@ -30,12 +31,13 @@ class Game {
 
     constructor(){
 
-        //Creates Towers || Castle || Tree || Enemies
-        // this.fightPhase = new Fight(1, this)
-        // this.buildPhase = new Build(1, this)
-        this.tower1 = new Tower(1, this)
+        //Creates Towers || Castle || Enemies
+        this.towers.push(new Tower(1, this))
         this.castle = new Castle()
-        this.tree   = new Tree()
+
+        let game = document.getElementsByTagName("game")[0]
+        this.phase = document.createElement("phase")
+        game.appendChild(this.phase)
 
         //Starts gameLoop()
         this.gameLoop()
@@ -65,21 +67,27 @@ class Game {
                 
                 //als er in build.ts op oke klikt verandert dee gamestate naar fight
                 this.previousGamestate = this._gamestate
+
+                if(this.waveLevel > 3){
+                    console.log("new tower add")
+                    let i = this.waveLevel - 2
+                    this.towers.push(new Tower(i, this))                    
+                }
             }  
             
             if (this._gamestate == 'fight' && this.previousGamestate == 'build'){
             
+                this.buildPhase.removeButton()
                 this.fightPhase = new Fight(this.waveLevel, this)
                 this.waveLevel +=1
+                this.waveCounter ++
 
                 this.previousGamestate = this._gamestate
             }
             
         if (this._gamestate === "build") {
             this.buildPhase.updateBuild()
-        } else {
-            // this.fightPhase.updateFight()
-        }
+        } 
 
         if(this._gamestate === "fight") {
             this.fightPhase.updateFight()

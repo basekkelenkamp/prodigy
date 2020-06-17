@@ -10,8 +10,8 @@ class Tower {
     attackSpeed : number
     counter : number = 0
 
-    x : number = 500
-    y : number = 400
+    x : number = 900
+    y : number = 160
 
     mouseX : number = 0
     mouseY : number = 0
@@ -21,8 +21,7 @@ class Tower {
          //Initialize enemy: || STRENGTH || HP || DAMAGE || SPEED ||
          this.strength = level
          this.damage = level*60
-         this.gameInstance = gameInstance
-         
+         this.gameInstance = gameInstance         
 
          //Create tower
          this.element = document.createElement("tower")
@@ -37,9 +36,7 @@ class Tower {
          //Eventlisteners
          this.element.addEventListener('mousemove', ()=> this.hoverTower(event))
          this.element.addEventListener('mouseout', ()=> this.hoverTowerClear(event))
-
-        //  this.element.addEventListener('dragstart', ()=> this.moveTower(event))
-        //  this.element.addEventListener('dragend', ()=> this.gameInstance.buildPhase.dropTower(event))        
+         this.element.addEventListener('dragend', ()=> this.dropTower(event))
 
         }
     
@@ -92,14 +89,15 @@ class Tower {
 
 
         addDragfunction(){
-            this.element.addEventListener('dragend', ()=> this.dropTower(event))
-            this.element.draggable = true 
+            this.element.draggable = true
+            this.element.style.cursor = "grab"
         }
 
         removeDragfunction(){
-            this.element.removeEventListener('dragend', ()=> this.dropTower(event))
+            // this.element.removeEventListener('dragend', ()=> this.dropTower(event))
             console.log("eventlistener removed");
             this.element.draggable = false
+            this.element.style.cursor = "default"
 
              
         }

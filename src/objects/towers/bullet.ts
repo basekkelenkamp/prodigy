@@ -27,7 +27,7 @@ class Bullet {
         //Initialize bullet: || DAMAGE || SPEED || Distance
         this.strength = level
         this.damage = (level * 10 + 5)
-        this.distance = this.x - (level * 20 + 180)
+        this.distance = this.x - (level * 200 + 180)
         
         console.log(this.distance + "DISTANCE")
         

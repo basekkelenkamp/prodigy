@@ -5,11 +5,9 @@ class Build {
 
     element : HTMLElement
     button : HTMLElement
+
     gameInstance : Game
 
-
-    
-    
     strength : number
 
     damage : number
@@ -25,23 +23,31 @@ class Build {
 
     constructor(level : number, gameInstance : Game){
         this.gameInstance = gameInstance
-        gameInstance.tower1.addDragfunction()
 
-        // button.setAttribute("onclick", "this.buttonClickHandler()")
+
+        //loop through towers
+        for (const tower of this.gameInstance.towers) { 
+           tower.addDragfunction()
+        }
 
 
         console.log("build phase");
         
-        this.button = document.createElement("button")
+        this.button = document.createElement("start")
         let game = document.getElementsByTagName("game")[0]
-        this.button.innerHTML = "Ready to Fight!"
         game.appendChild(this.button)
+
+
+        this.gameInstance.phase.style.backgroundImage = `url(images/scenery/buildphase.png)`;
 
         this.button.addEventListener("click", ()=> this.buttonClickHandler())
 
     }
 
 
+    removeButton(){
+        this.button.remove()
+    }
 
 
     buttonClickHandler(){
@@ -52,6 +58,6 @@ class Build {
     updateBuild(){
 
         console.log("build phase");
-        
+
     }
 }

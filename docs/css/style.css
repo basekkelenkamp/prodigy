@@ -1,8 +1,14 @@
+@font-face {
+    font-family: Warpriest;
+    src: url(../font/WarPriestCondensed-2Z8X.ttf);
+  }
+
 body {
     background-image: url(../images/scenery/map.png);
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: Warpriest;
     overflow:hidden;
     margin:0px; padding:0px;
+    font-size: 20px;
 }
 
 game * {
@@ -13,9 +19,32 @@ game * {
     background-repeat: no-repeat;
 }
 
+start {
+    background-image: url(../images/scenery/start.png);
+    transform: translate(1375px, 250px);
+    width:274px; height: 109px;
+    cursor: pointer;
+}
+
+start:hover {
+    filter: hue-rotate(40deg);
+    transition: 0.5s;
+}
+
 enemy {
     background-image: url(../images/enemies/monster_placeholder.png);
     width:130px; height: 110px;
+}
+
+phase {
+    background-image: url(../images/scenery/buildphase.png);
+    width:530px; height: 150px;
+    transform: translate(695px, 0px);
+}
+
+wavetext {
+    font-size: 40px;
+    transform: translate(1550px, 600px);
 }
 
 tree {
@@ -25,6 +54,12 @@ tree {
 tower {
     background-image: url(../images/towers/basicTower.png);
     width: 120px; height: 120px;
+    cursor: grab;
+}
+
+tower:hover {
+    filter: hue-rotate(40deg);
+    transition: 0.5s;
 }
 
 castle {
