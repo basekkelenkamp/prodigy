@@ -30,7 +30,7 @@ class Enemy {
         this.element = document.createElement("enemy")
         let game = document.getElementsByTagName("game")[0]
         game.appendChild(this.element)
-        this.element.style.filter = `hue-rotate(${level*60}deg)`
+        this.element.style.filter = `hue-rotate(${level*90}deg)`
 
         //Create HP bar
         this.healthBar = document.createElement("healthbar")

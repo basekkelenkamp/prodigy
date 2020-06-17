@@ -30,7 +30,6 @@ class Tower {
          this.element.id = "tower"
          this.element.draggable = true
          game.appendChild(this.element)
-         this.element.style.filter = `hue-rotate(${this.strength*90}deg)`
          
          //Set tower position
          this.element.style.transform = `translate(${this.x}px, ${this.y}px)`
@@ -42,9 +41,6 @@ class Tower {
         //  this.element.addEventListener('dragstart', ()=> this.moveTower(event))
         //  this.element.addEventListener('dragend', ()=> this.gameInstance.buildPhase.dropTower(event))        
 
-
-         //Tower shoots bullet
-         this.shoot()
         }
     
         //Defines center height of the tower
@@ -96,10 +92,15 @@ class Tower {
 
 
         addDragfunction(){
-            this.element.addEventListener('dragend', ()=> this.dropTower(event)) 
+            this.element.addEventListener('dragend', ()=> this.dropTower(event))
+            this.element.draggable = true 
         }
 
         removeDragfunction(){
-            this.element.removeEventListener('dragend', ()=> this.dropTower(event)) 
+            this.element.removeEventListener('dragend', ()=> this.dropTower(event))
+            console.log("eventlistener removed");
+            this.element.draggable = false
+
+             
         }
 }

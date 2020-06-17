@@ -6,6 +6,7 @@ class Game {
 
     buildPhase : Build
     fightPhase : Fight
+    waveLevel : number = 3
 
     tower1 : Tower
 
@@ -68,7 +69,8 @@ class Game {
             
             if (this._gamestate == 'fight' && this.previousGamestate == 'build'){
             
-                this.fightPhase = new Fight(1, this)
+                this.fightPhase = new Fight(this.waveLevel, this)
+                this.waveLevel +=1
 
                 this.previousGamestate = this._gamestate
             }
@@ -115,6 +117,10 @@ class Game {
                         bullet.removeBullet()
                     }
                 }
+            }
+
+            if(this.fightPhase.enemiesAmount === 0){
+                this._gamestate = "build"
             }
         }
 
