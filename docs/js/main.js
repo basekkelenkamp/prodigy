@@ -5,9 +5,9 @@ class Tower {
         this.y = 160;
         this.mouseX = 0;
         this.mouseY = 0;
+        this.gameInstance = gameInstance;
         this.strength = level;
         this.damage = level * 60;
-        this.gameInstance = gameInstance;
         this.element = document.createElement("tower");
         let game = document.getElementsByTagName("game")[0];
         this.element.id = "tower";
@@ -63,16 +63,10 @@ class Tower {
 }
 class Build {
     constructor(level, gameInstance) {
-        this.counter = 0;
-        this.x = 500;
-        this.y = 400;
-        this.mouseX = 0;
-        this.mouseY = 0;
         this.gameInstance = gameInstance;
         for (const tower of this.gameInstance.towers) {
             tower.addDragfunction();
         }
-        console.log("build phase");
         this.button = document.createElement("start");
         let game = document.getElementsByTagName("game")[0];
         game.appendChild(this.button);
@@ -85,14 +79,10 @@ class Build {
     buttonClickHandler() {
         this.gameInstance.gamestate = "fight";
     }
-    updateBuild() {
-        console.log("build phase");
-    }
 }
 class Fight {
     constructor(enemies, gameInstance) {
         this.enemies = [];
-        this.bulletCounter = 0;
         this.gameInstance = gameInstance;
         this.newWave = 0;
         this.enemiesAmount = enemies;
@@ -105,7 +95,6 @@ class Fight {
         for (const tower of this.gameInstance.towers) {
             tower.removeDragfunction();
         }
-        console.log("attack phase");
         for (let i = 0; i < this.enemiesAmount; i++) {
             this.enemies.push(new Enemy(i + 0.75, this));
         }
@@ -218,15 +207,11 @@ class Game {
             this.waveCounter++;
             this.previousGamestate = this._gamestate;
         }
-        if (this._gamestate === "build") {
-            this.buildPhase.updateBuild();
-        }
         if (this._gamestate === "fight") {
             this.fightPhase.updateFight();
             for (let i = 0; i < this.fightPhase.enemies.length; i++) {
                 let hit = this.checkCollision(this.fightPhase.enemies[i].getRectangle(), this.castle.getRectangle());
                 if (hit) {
-                    console.log("collision is: " + hit);
                     this.castle.healthPoints -= this.fightPhase.enemies[i].damage;
                     this.castle.updateHP();
                     this.fightPhase.enemies[i].x = 0;
@@ -238,7 +223,6 @@ class Game {
                 for (let i = 0; i < this.fightPhase.enemies.length; i++) {
                     let hitEnemy = this.checkCollision(this.fightPhase.enemies[i].getRectangle(), bullet.getRectangle());
                     if (hitEnemy) {
-                        console.log("collision is: " + hitEnemy);
                         this.fightPhase.enemies[i].healthPoints -= bullet.damage;
                         this.fightPhase.enemies[i].updateHP();
                         bullet.removeBullet();
@@ -298,11 +282,11 @@ class Castle {
 }
 class Enemy {
     constructor(level, fightInstance) {
+        this.x = 0;
+        this.y = 200;
         this.xspeed = 0;
         this.yspeed = 0;
         this.state = 0;
-        this.x = 0;
-        this.y = 200;
         this.fightInstance = fightInstance;
         this.strength = level;
         this.healthPoints = level * 100;
@@ -374,42 +358,21 @@ class Enemy {
         }
     }
 }
-class Tree {
-    constructor() {
-        this.x = 0;
-        this.y = 300;
-        this.boom = 1;
-        this.element = document.createElement("tree");
-        let game = document.getElementsByTagName("game")[0];
-        game.appendChild(this.element);
-        this.element.style.transform = `translate(${this.x}px, ${this.y}px)`;
-        this.element.addEventListener("click", () => this.beweeg());
-    }
-    beweeg() {
-        this.boom++;
-        if (this.boom === 5) {
-            this.boom = 1;
-        }
-        this.element.style.backgroundImage = `url(images/scenery/Armored_Tree${this.boom}.png)`;
-    }
-}
 class Bullet {
     constructor(level, positionX, positionY, gameInstance) {
-        this.speed = 2;
         this.x = 0;
         this.y = 0;
         this.xMove = 500;
+        this.speed = 2;
         this.gameInstance = gameInstance;
         this.x = positionX;
         this.y = positionY;
-        this.strength = level;
         this.damage = (level * 10 + 5);
         this.distance = this.x - (level * 200 + 180);
-        console.log(this.distance + "DISTANCE");
         this.element = document.createElement("bullet");
         let game = document.getElementsByTagName("game")[0];
         game.appendChild(this.element);
-        this.element.style.filter = `hue-rotate(${0}deg)`;
+        this.element.style.filter = `hue-rotate(180deg)`;
     }
     getRectangle() {
         return this.element.getBoundingClientRect();

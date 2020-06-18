@@ -1,18 +1,22 @@
 class Enemy {
 
+    //HTML & instance variables
     element : HTMLElement
     healthBar : HTMLElement
     fightInstance : Fight
 
+
+    //Position handling & parameters for the enemy
+    x : number = 0
+    y : number = 200
+    xspeed : number = 0
+    yspeed : number = 0
     strength : number
     healthPoints : number
     damage : number
-    xspeed : number = 0
-    yspeed : number = 0
+    
+    //State machine for movement
     state : number = 0
-
-    x : number = 0
-    y : number = 200
 
 
     constructor(level : number, fightInstance : Fight){
@@ -47,9 +51,11 @@ class Enemy {
     //Movement of the enemy
     move(){
 
+        //speed for x & y
         this.x += this.xspeed
         this.y += this.yspeed
-                 
+               
+        //state machine for enemy pathing
         switch (this.state) {
             case 0 : 
                 if (this.x > 350) {
@@ -96,7 +102,7 @@ class Enemy {
             }
             
         }
-        
+        //update position
         this.element.style.transform = `translate(${this.x}px, ${this.y}px)`
     }
 

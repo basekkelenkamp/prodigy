@@ -1,13 +1,15 @@
 class Castle {
 
+    //position handling & parameters for the castle
     element : HTMLElement
     healthBar : HTMLElement
 
+    //Position & HP for castle
     healthPoints : number = 1000
-
     x : number = 0
     y : number = 0
 
+    //variable for broken state
     castleImg : number = 1
 
     constructor(){
@@ -57,6 +59,7 @@ class Castle {
             }
         }
 
+        //update castle image
         this.element.style.backgroundImage = `url(images/castle/castle${this.castleImg}.png)`;
 
     }

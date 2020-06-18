@@ -1,44 +1,41 @@
 class Tower {
 
+    //HTML & instance variables
     element : HTMLElement
     gameInstance : Game
 
+
+    //position handling & parameters for the tower
     strength : number
-
     damage : number
-
-    attackSpeed : number
     counter : number = 0
-
     x : number = 900
     y : number = 160
-
     mouseX : number = 0
     mouseY : number = 0
 
     constructor(level : number, gameInstance : Game){
 
-         //Initialize enemy: || STRENGTH || HP || DAMAGE || SPEED ||
-         this.strength = level
-         this.damage = level*60
-         this.gameInstance = gameInstance         
+        this.gameInstance = gameInstance         
 
-         //Create tower
-         this.element = document.createElement("tower")
-         let game = document.getElementsByTagName("game")[0]
-         this.element.id = "tower"
-         this.element.draggable = true
-         game.appendChild(this.element)
-         
-         //Set tower position
-         this.element.style.transform = `translate(${this.x}px, ${this.y}px)`
+        //Initialize tower: || STRENGTH || DAMAGE ||
+        this.strength = level
+        this.damage = level*60
 
-         //Eventlisteners
-         this.element.addEventListener('mousemove', ()=> this.hoverTower(event))
-         this.element.addEventListener('mouseout', ()=> this.hoverTowerClear(event))
-         this.element.addEventListener('dragend', ()=> this.dropTower(event))
+        //Create tower
+        this.element = document.createElement("tower")
+        let game = document.getElementsByTagName("game")[0]
+        this.element.id = "tower"
+        this.element.draggable = true
+        game.appendChild(this.element)
+        this.element.style.transform = `translate(${this.x}px, ${this.y}px)`
 
-        }
+        //Eventlisteners
+        this.element.addEventListener('mousemove', ()=> this.hoverTower(event))
+        this.element.addEventListener('mouseout', ()=> this.hoverTowerClear(event))
+        this.element.addEventListener('dragend', ()=> this.dropTower(event))
+
+    }
     
         //Defines center height of the tower
         public getLocationY(){
@@ -74,7 +71,7 @@ class Tower {
             this.element.style.border = "groove"
             console.log(e)
         }
-
+        
         //Removes highlight box on hover
         hoverTowerClear(e){
             this.element.style.border = ""
@@ -87,18 +84,17 @@ class Tower {
             this.element.style.transform = `translate(${this.mouseX}px, ${this.mouseY}px)`
         }
 
-
+        //Enables drag functionality
         addDragfunction(){
             this.element.draggable = true
             this.element.style.cursor = "grab"
         }
 
+        //Disables drag functionality
         removeDragfunction(){
-            // this.element.removeEventListener('dragend', ()=> this.dropTower(event))
             console.log("eventlistener removed");
             this.element.draggable = false
             this.element.style.cursor = "default"
-
-             
         }
+        
 }
