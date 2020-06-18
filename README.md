@@ -11,9 +11,6 @@
 - Click <a href="https://kkarta30.github.io/Prodigy-Website/">here</a> to visit our website!
 
 
-
-
----
 ---
 
 **How to play**
@@ -33,12 +30,13 @@
 >  3. Shows current wave number
 
 ---
----
+
 
 ## Story
 
 Prodigy is a browser based tower defense game! Your goal is to defend the home base from waves of evil slime monsters. The land of Winehaven is being terrorized by these monster like creatures & they are out for blood. Strategically place different types of towers to defend yourself from the waves of continuously stronger growing enemies..
 
+---
 ---
 
 Made by Creative Media & Game Technologies Students.
