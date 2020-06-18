@@ -1,164 +1,3 @@
-class Tower {
-    constructor(level, gameInstance) {
-        this.counter = 0;
-        this.x = 900;
-        this.y = 160;
-        this.mouseX = 0;
-        this.mouseY = 0;
-        this.gameInstance = gameInstance;
-        this.strength = level;
-        this.damage = level * 60;
-        this.element = document.createElement("tower");
-        let game = document.getElementsByTagName("game")[0];
-        this.element.id = "tower";
-        this.element.draggable = true;
-        game.appendChild(this.element);
-        this.element.style.transform = `translate(${this.x}px, ${this.y}px)`;
-        this.element.addEventListener('mousemove', () => this.hoverTower(event));
-        this.element.addEventListener('mouseout', () => this.hoverTowerClear(event));
-        this.element.addEventListener('dragend', () => this.dropTower(event));
-    }
-    getLocationY() {
-        let position = this.element.getBoundingClientRect();
-        console.log(position.height * 0.5 + position.y);
-        return position.height * 0.5 + position.y;
-    }
-    getLocationX() {
-        let position = this.element.getBoundingClientRect();
-        console.log(position.width * 0.5 + position.x);
-        return position.width * 0.5 + position.x;
-    }
-    shoot() {
-        let bullet = new Bullet(1, this.getLocationX(), this.getLocationY(), this.gameInstance);
-        this.gameInstance.Bullets.push(bullet);
-    }
-    updateTower() {
-        this.counter++;
-        if (this.counter > 60) {
-            this.shoot();
-            this.counter = 0;
-        }
-    }
-    hoverTower(e) {
-        this.element.style.border = "groove";
-        console.log(e);
-    }
-    hoverTowerClear(e) {
-        this.element.style.border = "";
-    }
-    dropTower(e) {
-        this.mouseX = e.clientX;
-        this.mouseY = e.clientY;
-        this.element.style.transform = `translate(${this.mouseX}px, ${this.mouseY}px)`;
-    }
-    addDragfunction() {
-        this.element.draggable = true;
-        this.element.style.cursor = "grab";
-    }
-    removeDragfunction() {
-        console.log("eventlistener removed");
-        this.element.draggable = false;
-        this.element.style.cursor = "default";
-    }
-}
-class Build {
-    constructor(level, gameInstance) {
-        this.gameInstance = gameInstance;
-        for (const tower of this.gameInstance.towers) {
-            tower.addDragfunction();
-        }
-        this.button = document.createElement("start");
-        let game = document.getElementsByTagName("game")[0];
-        game.appendChild(this.button);
-        this.gameInstance.phase.style.backgroundImage = `url(images/scenery/buildphase.png)`;
-        this.button.addEventListener("click", () => this.buttonClickHandler());
-    }
-    removeButton() {
-        this.button.remove();
-    }
-    buttonClickHandler() {
-        this.gameInstance.gamestate = "fight";
-    }
-}
-class Fight {
-    constructor(enemies, gameInstance) {
-        this.enemies = [];
-        this.gameInstance = gameInstance;
-        this.newWave = 0;
-        this.enemiesAmount = enemies;
-        this.bossLvl = enemies + 1;
-        this.waveText = document.createElement("wavetext");
-        let game = document.getElementsByTagName("game")[0];
-        game.appendChild(this.waveText);
-        this.waveText.innerHTML = `Current wave: ${this.gameInstance.waveCounter}`;
-        this.gameInstance.phase.style.backgroundImage = `url(images/scenery/attackphase.png)`;
-        for (const tower of this.gameInstance.towers) {
-            tower.removeDragfunction();
-        }
-        for (let i = 0; i < this.enemiesAmount; i++) {
-            this.enemies.push(new Enemy(i + 0.75, this));
-        }
-    }
-    removeEnemy(enemy) {
-        let i = this.enemies.indexOf(enemy);
-        this.enemies.splice(i, 1);
-        console.log(this.enemies.length);
-        this.enemiesAmount -= 1;
-    }
-    updateFight() {
-        for (const tower of this.gameInstance.towers) {
-            tower.updateTower();
-        }
-        for (const bullet of this.gameInstance.Bullets) {
-            bullet.move();
-        }
-        if (this.enemiesAmount == 2 && this.newWave == 0) {
-            this.enemies.push(new Enemy(this.enemiesAmount * 0.25, this));
-            this.enemies.push(new Enemy(this.enemiesAmount * 0.5, this));
-            this.newWave = 1;
-            this.enemiesAmount += 2;
-        }
-        if (this.enemiesAmount == 1 && this.newWave == 1) {
-            this.enemies.push(new Enemy(this.bossLvl, this));
-            this.enemies.push(new Enemy(0.8, this));
-            this.enemies.push(new Enemy(0.7, this));
-            this.enemiesAmount += 3;
-            if (this.gameInstance.waveLevel > 4) {
-                this.enemies.push(new Enemy(0.6, this));
-                this.enemies.push(new Enemy(0.5, this));
-                this.enemiesAmount += 2;
-            }
-            this.newWave = 2;
-        }
-        if (this.enemiesAmount == 1 && this.newWave == 2) {
-            this.enemies.push(new Enemy(0.8, this));
-            this.enemies.push(new Enemy(0.7, this));
-            this.enemiesAmount += 2;
-            this.newWave = 3;
-        }
-        if (this.enemiesAmount == 1 && this.newWave == 3) {
-            this.enemies.push(new Enemy(0.8, this));
-            this.enemies.push(new Enemy(0.7, this));
-            this.enemiesAmount += 2;
-            this.newWave = 4;
-        }
-        if (this.enemiesAmount == 1 && this.newWave == 4 && this.gameInstance.waveLevel > 4) {
-            this.enemies.push(new Enemy(0.8, this));
-            this.enemies.push(new Enemy(0.7, this));
-            this.enemiesAmount += 2;
-            this.newWave = 5;
-        }
-        if (this.enemiesAmount == 1 && this.newWave == 5 && this.gameInstance.waveLevel > 5) {
-            this.enemies.push(new Enemy(0.8, this));
-            this.enemies.push(new Enemy(0.7, this));
-            this.enemiesAmount += 2;
-            this.newWave = 6;
-        }
-        for (let i = 0; i < this.enemiesAmount; i++) {
-            this.enemies[i].move();
-        }
-    }
-}
 class Game {
     constructor() {
         this.waveLevel = 3;
@@ -387,6 +226,167 @@ class Bullet {
     removeBullet() {
         this.gameInstance.removeBullet(this);
         this.element.remove();
+    }
+}
+class Tower {
+    constructor(level, gameInstance) {
+        this.counter = 0;
+        this.x = 900;
+        this.y = 160;
+        this.mouseX = 0;
+        this.mouseY = 0;
+        this.gameInstance = gameInstance;
+        this.strength = level;
+        this.damage = level * 60;
+        this.element = document.createElement("tower");
+        let game = document.getElementsByTagName("game")[0];
+        this.element.id = "tower";
+        this.element.draggable = true;
+        game.appendChild(this.element);
+        this.element.style.transform = `translate(${this.x}px, ${this.y}px)`;
+        this.element.addEventListener('mousemove', () => this.hoverTower(event));
+        this.element.addEventListener('mouseout', () => this.hoverTowerClear(event));
+        this.element.addEventListener('dragend', () => this.dropTower(event));
+    }
+    getLocationY() {
+        let position = this.element.getBoundingClientRect();
+        console.log(position.height * 0.5 + position.y);
+        return position.height * 0.5 + position.y;
+    }
+    getLocationX() {
+        let position = this.element.getBoundingClientRect();
+        console.log(position.width * 0.5 + position.x);
+        return position.width * 0.5 + position.x;
+    }
+    shoot() {
+        let bullet = new Bullet(1, this.getLocationX(), this.getLocationY(), this.gameInstance);
+        this.gameInstance.Bullets.push(bullet);
+    }
+    updateTower() {
+        this.counter++;
+        if (this.counter > 60) {
+            this.shoot();
+            this.counter = 0;
+        }
+    }
+    hoverTower(e) {
+        this.element.style.border = "groove";
+        console.log(e);
+    }
+    hoverTowerClear(e) {
+        this.element.style.border = "";
+    }
+    dropTower(e) {
+        this.mouseX = e.clientX;
+        this.mouseY = e.clientY;
+        this.element.style.transform = `translate(${this.mouseX}px, ${this.mouseY}px)`;
+    }
+    addDragfunction() {
+        this.element.draggable = true;
+        this.element.style.cursor = "grab";
+    }
+    removeDragfunction() {
+        console.log("eventlistener removed");
+        this.element.draggable = false;
+        this.element.style.cursor = "default";
+    }
+}
+class Build {
+    constructor(level, gameInstance) {
+        this.gameInstance = gameInstance;
+        for (const tower of this.gameInstance.towers) {
+            tower.addDragfunction();
+        }
+        this.button = document.createElement("start");
+        let game = document.getElementsByTagName("game")[0];
+        game.appendChild(this.button);
+        this.gameInstance.phase.style.backgroundImage = `url(images/scenery/buildphase.png)`;
+        this.button.addEventListener("click", () => this.buttonClickHandler());
+    }
+    removeButton() {
+        this.button.remove();
+    }
+    buttonClickHandler() {
+        this.gameInstance.gamestate = "fight";
+    }
+}
+class Fight {
+    constructor(enemies, gameInstance) {
+        this.enemies = [];
+        this.gameInstance = gameInstance;
+        this.newWave = 0;
+        this.enemiesAmount = enemies;
+        this.bossLvl = enemies + 1;
+        this.waveText = document.createElement("wavetext");
+        let game = document.getElementsByTagName("game")[0];
+        game.appendChild(this.waveText);
+        this.waveText.innerHTML = `Current wave: ${this.gameInstance.waveCounter}`;
+        this.gameInstance.phase.style.backgroundImage = `url(images/scenery/attackphase.png)`;
+        for (const tower of this.gameInstance.towers) {
+            tower.removeDragfunction();
+        }
+        for (let i = 0; i < this.enemiesAmount; i++) {
+            this.enemies.push(new Enemy(i + 0.75, this));
+        }
+    }
+    removeEnemy(enemy) {
+        let i = this.enemies.indexOf(enemy);
+        this.enemies.splice(i, 1);
+        console.log(this.enemies.length);
+        this.enemiesAmount -= 1;
+    }
+    updateFight() {
+        for (const tower of this.gameInstance.towers) {
+            tower.updateTower();
+        }
+        for (const bullet of this.gameInstance.Bullets) {
+            bullet.move();
+        }
+        if (this.enemiesAmount == 2 && this.newWave == 0) {
+            this.enemies.push(new Enemy(this.enemiesAmount * 0.25, this));
+            this.enemies.push(new Enemy(this.enemiesAmount * 0.5, this));
+            this.newWave = 1;
+            this.enemiesAmount += 2;
+        }
+        if (this.enemiesAmount == 1 && this.newWave == 1) {
+            this.enemies.push(new Enemy(this.bossLvl, this));
+            this.enemies.push(new Enemy(0.8, this));
+            this.enemies.push(new Enemy(0.7, this));
+            this.enemiesAmount += 3;
+            if (this.gameInstance.waveLevel > 4) {
+                this.enemies.push(new Enemy(0.6, this));
+                this.enemies.push(new Enemy(0.5, this));
+                this.enemiesAmount += 2;
+            }
+            this.newWave = 2;
+        }
+        if (this.enemiesAmount == 1 && this.newWave == 2) {
+            this.enemies.push(new Enemy(0.8, this));
+            this.enemies.push(new Enemy(0.7, this));
+            this.enemiesAmount += 2;
+            this.newWave = 3;
+        }
+        if (this.enemiesAmount == 1 && this.newWave == 3) {
+            this.enemies.push(new Enemy(0.8, this));
+            this.enemies.push(new Enemy(0.7, this));
+            this.enemiesAmount += 2;
+            this.newWave = 4;
+        }
+        if (this.enemiesAmount == 1 && this.newWave == 4 && this.gameInstance.waveLevel > 4) {
+            this.enemies.push(new Enemy(0.8, this));
+            this.enemies.push(new Enemy(0.7, this));
+            this.enemiesAmount += 2;
+            this.newWave = 5;
+        }
+        if (this.enemiesAmount == 1 && this.newWave == 5 && this.gameInstance.waveLevel > 5) {
+            this.enemies.push(new Enemy(0.8, this));
+            this.enemies.push(new Enemy(0.7, this));
+            this.enemiesAmount += 2;
+            this.newWave = 6;
+        }
+        for (let i = 0; i < this.enemiesAmount; i++) {
+            this.enemies[i].move();
+        }
     }
 }
 //# sourceMappingURL=main.js.map
