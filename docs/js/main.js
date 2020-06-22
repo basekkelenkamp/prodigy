@@ -5,6 +5,7 @@ class Game {
         this.towers = [];
         this.bullets = [];
         this.bulletCounter = 0;
+        this.buildLvl = 0;
         this._gamestate = "build";
         this.previousGamestate = "fight";
         this.towers.push(new Tower(1, this));
@@ -12,6 +13,14 @@ class Game {
         let game = document.getElementsByTagName("game")[0];
         this.phase = document.createElement("phase");
         game.appendChild(this.phase);
+        this.waveText = document.createElement("wavetext");
+        game.appendChild(this.waveText);
+        this.waveText.innerHTML = `Current wave: ${this.waveCounter}`;
+        this.playAgain = document.createElement("a");
+        game.appendChild(this.playAgain);
+        this.playAgain.style.display = "none";
+        this.playAgain.innerHTML = `Play again?`;
+        this.playAgain.setAttribute("href", "index.html");
         this.gameLoop();
     }
     get Bullets() {
@@ -27,14 +36,14 @@ class Game {
     removeBullet(bullet) {
         let i = this.Bullets.indexOf(bullet);
         this.Bullets.splice(i, 1);
-        console.log(this.Bullets.length);
     }
     gameLoop() {
         if (this._gamestate === "build" && this.previousGamestate == "fight") {
-            this.buildPhase = new Build(1, this);
+            this.buildPhase = new Build(this.buildLvl, this);
+            this.buildLvl++;
             this.previousGamestate = this._gamestate;
+            this.waveText.innerHTML = `Current wave: ${this.waveCounter}`;
             if (this.waveLevel > 3) {
-                console.log("new tower add");
                 let i = this.waveLevel - 2;
                 this.towers.push(new Tower(i, this));
             }
@@ -45,6 +54,9 @@ class Game {
             this.waveLevel += 1;
             this.waveCounter++;
             this.previousGamestate = this._gamestate;
+        }
+        if (this._gamestate === "build") {
+            this.buildPhase.update();
         }
         if (this._gamestate === "fight") {
             this.fightPhase.updateFight();
@@ -71,6 +83,11 @@ class Game {
             if (this.fightPhase.enemiesAmount === 0) {
                 this._gamestate = "build";
             }
+        }
+        if (this.castle.healthPoints < 1) {
+            this.castle.healthPoints = 0;
+            this._gamestate = "gameover";
+            this.playAgain.style.display = "block";
         }
         requestAnimationFrame(() => this.gameLoop());
     }
@@ -125,19 +142,26 @@ class Enemy {
         this.y = 200;
         this.xspeed = 0;
         this.yspeed = 0;
+        this.boss = "";
         this.state = 0;
         this.fightInstance = fightInstance;
-        this.strength = level;
+        this.speed = 0.85 / level;
         this.healthPoints = level * 100;
         this.damage = level * 60;
-        this.xspeed = 0.75 / this.strength;
         this.yspeed = 0;
+        if (level > 3) {
+            this.speed = level / 15;
+        }
+        this.xspeed = this.speed;
         this.element = document.createElement("enemy");
         let game = document.getElementsByTagName("game")[0];
         game.appendChild(this.element);
         this.element.style.filter = `hue-rotate(${level * 90}deg)`;
+        if (level > 3) {
+            this.boss = " BOSS";
+        }
         this.healthBar = document.createElement("healthbar");
-        this.healthBar.innerHTML = `${this.healthPoints}HP`;
+        this.healthBar.innerHTML = `${this.healthPoints}HP${this.boss}`;
         this.element.appendChild(this.healthBar);
     }
     getRectangle() {
@@ -149,38 +173,33 @@ class Enemy {
         switch (this.state) {
             case 0:
                 if (this.x > 350) {
-                    console.log("move down");
-                    this.yspeed = 0.75 / this.strength;
+                    this.yspeed = this.speed;
                     this.xspeed = 0;
                     this.state = 1;
                 }
                 break;
             case 1:
                 if (this.y > 700) {
-                    console.log("move right");
-                    this.xspeed = 0.75 / this.strength;
+                    this.xspeed = this.speed;
                     this.yspeed = 0;
                     this.state = 2;
                 }
                 break;
             case 2:
                 if (this.x > 1320) {
-                    console.log("move up");
-                    this.yspeed = -0.75 / this.strength;
+                    this.yspeed = this.speed * -1;
                     this.xspeed = 0;
                     this.state = 3;
                     break;
                 }
             case 3:
                 if (this.y < 460) {
-                    console.log("move right");
-                    this.xspeed = 0.75 / this.strength;
+                    this.xspeed = this.speed;
                     this.yspeed = 0;
                     break;
                 }
             case 4:
                 if (this.x > innerWidth - 260) {
-                    console.log("reset");
                     this.x = 0;
                     this.y = 200;
                     this.state = 0;
@@ -189,7 +208,7 @@ class Enemy {
         this.element.style.transform = `translate(${this.x}px, ${this.y}px)`;
     }
     updateHP() {
-        this.healthBar.innerHTML = `${this.healthPoints}HP`;
+        this.healthBar.innerHTML = `${this.healthPoints}HP${this.boss}`;
         this.element.appendChild(this.healthBar);
         if (this.healthPoints < 1) {
             this.element.remove();
@@ -202,7 +221,7 @@ class Bullet {
         this.x = 0;
         this.y = 0;
         this.xMove = 500;
-        this.speed = 2;
+        this.speed = 4;
         this.gameInstance = gameInstance;
         this.x = positionX;
         this.y = positionY;
@@ -235,6 +254,7 @@ class Tower {
         this.y = 160;
         this.mouseX = 0;
         this.mouseY = 0;
+        this.dragged = false;
         this.gameInstance = gameInstance;
         this.strength = level;
         this.damage = level * 60;
@@ -244,18 +264,19 @@ class Tower {
         this.element.draggable = true;
         game.appendChild(this.element);
         this.element.style.transform = `translate(${this.x}px, ${this.y}px)`;
+        this.text = document.createElement("drag");
+        this.text.innerHTML = `Click to drag`;
+        this.element.appendChild(this.text);
         this.element.addEventListener('mousemove', () => this.hoverTower(event));
         this.element.addEventListener('mouseout', () => this.hoverTowerClear(event));
         this.element.addEventListener('dragend', () => this.dropTower(event));
     }
     getLocationY() {
         let position = this.element.getBoundingClientRect();
-        console.log(position.height * 0.5 + position.y);
         return position.height * 0.5 + position.y;
     }
     getLocationX() {
         let position = this.element.getBoundingClientRect();
-        console.log(position.width * 0.5 + position.x);
         return position.width * 0.5 + position.x;
     }
     shoot() {
@@ -271,7 +292,6 @@ class Tower {
     }
     hoverTower(e) {
         this.element.style.border = "groove";
-        console.log(e);
     }
     hoverTowerClear(e) {
         this.element.style.border = "";
@@ -280,19 +300,21 @@ class Tower {
         this.mouseX = e.clientX;
         this.mouseY = e.clientY;
         this.element.style.transform = `translate(${this.mouseX}px, ${this.mouseY}px)`;
+        this.text.style.display = "none";
+        this.dragged = true;
     }
     addDragfunction() {
         this.element.draggable = true;
         this.element.style.cursor = "grab";
     }
     removeDragfunction() {
-        console.log("eventlistener removed");
         this.element.draggable = false;
         this.element.style.cursor = "default";
     }
 }
 class Build {
     constructor(level, gameInstance) {
+        this.level = level;
         this.gameInstance = gameInstance;
         for (const tower of this.gameInstance.towers) {
             tower.addDragfunction();
@@ -300,8 +322,14 @@ class Build {
         this.button = document.createElement("start");
         let game = document.getElementsByTagName("game")[0];
         game.appendChild(this.button);
+        this.button.style.display = "none";
         this.gameInstance.phase.style.backgroundImage = `url(images/scenery/buildphase.png)`;
         this.button.addEventListener("click", () => this.buttonClickHandler());
+    }
+    update() {
+        if (this.gameInstance.towers[this.level].dragged) {
+            this.button.style.display = "block";
+        }
     }
     removeButton() {
         this.button.remove();
@@ -317,10 +345,6 @@ class Fight {
         this.newWave = 0;
         this.enemiesAmount = enemies;
         this.bossLvl = enemies + 1;
-        this.waveText = document.createElement("wavetext");
-        let game = document.getElementsByTagName("game")[0];
-        game.appendChild(this.waveText);
-        this.waveText.innerHTML = `Current wave: ${this.gameInstance.waveCounter}`;
         this.gameInstance.phase.style.backgroundImage = `url(images/scenery/attackphase.png)`;
         for (const tower of this.gameInstance.towers) {
             tower.removeDragfunction();
@@ -332,7 +356,6 @@ class Fight {
     removeEnemy(enemy) {
         let i = this.enemies.indexOf(enemy);
         this.enemies.splice(i, 1);
-        console.log(this.enemies.length);
         this.enemiesAmount -= 1;
     }
     updateFight() {

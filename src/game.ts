@@ -2,9 +2,11 @@ class Game {
 
     //HTML & instance variables
     phase : HTMLElement
+    waveText : HTMLElement
     buildPhase : Build
     fightPhase : Fight
     castle : Castle
+    playAgain : HTMLElement
 
     //Wave & properties variables
     waveLevel : number = 3
@@ -12,6 +14,7 @@ class Game {
     towers : Tower[] = []
     private bullets : Bullet[] = []
     bulletCounter : number = 0
+    buildLvl : number = 0
     
     //Phase handler
     private _gamestate : string = "build"
@@ -37,6 +40,20 @@ class Game {
         this.phase = document.createElement("phase")
         game.appendChild(this.phase)
 
+            //Create "current wave" text
+            this.waveText = document.createElement("wavetext")
+            game.appendChild(this.waveText)
+            this.waveText.innerHTML = `Current wave: ${this.waveCounter}`
+
+        
+        //Play again
+        this.playAgain = document.createElement("a")
+        game.appendChild(this.playAgain)
+        this.playAgain.style.display = "none"
+        this.playAgain.innerHTML = `Play again?`
+        this.playAgain.setAttribute("href","index.html")
+        
+
         //Starts gameLoop
         this.gameLoop()
         
@@ -54,7 +71,6 @@ class Game {
         removeBullet(bullet : Bullet){
             let i = this.Bullets.indexOf(bullet)
             this.Bullets.splice(i, 1)
-            console.log(this.Bullets.length)
         }
         
         //Animation loop of 60 FPS
@@ -62,12 +78,13 @@ class Game {
             
             //phase switch from fight to build
             if(this._gamestate === "build" && this.previousGamestate == "fight") {
-                this.buildPhase = new Build(1, this)
+                this.buildPhase = new Build(this.buildLvl, this)
+                this.buildLvl++
                 this.previousGamestate = this._gamestate
+                this.waveText.innerHTML = `Current wave: ${this.waveCounter}`
 
                 //If it's not build phase 1, add new tower every new build phase.
                 if(this.waveLevel > 3){
-                    console.log("new tower add")
                     let i = this.waveLevel - 2
                     this.towers.push(new Tower(i, this))                    
                 }
@@ -83,6 +100,13 @@ class Game {
                 this.waveCounter ++
                 this.previousGamestate = this._gamestate
             }
+
+
+            //Update build
+            if(this._gamestate === "build") {
+                this.buildPhase.update()
+            }
+
 
         //checks if gamestate is fight
         if(this._gamestate === "fight") {
@@ -127,6 +151,13 @@ class Game {
             if(this.fightPhase.enemiesAmount === 0){
                 this._gamestate = "build"
             }
+        }
+
+        //GAME OVER
+        if(this.castle.healthPoints < 1){
+            this.castle.healthPoints = 0
+            this._gamestate = "gameover"
+            this.playAgain.style.display = "block"
         }
 
         

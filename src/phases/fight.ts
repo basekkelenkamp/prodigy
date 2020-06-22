@@ -2,7 +2,6 @@ class Fight {
 
     //HTML & instance variables
     element : HTMLElement
-    waveText : HTMLElement
     gameInstance : Game
 
     //Enemies handling variables
@@ -18,11 +17,6 @@ class Fight {
         this.enemiesAmount = enemies
         this.bossLvl = enemies+1
 
-        //Create "current wave" text
-        this.waveText = document.createElement("wavetext")
-        let game = document.getElementsByTagName("game")[0]
-        game.appendChild(this.waveText)
-        this.waveText.innerHTML = `Current wave: ${this.gameInstance.waveCounter}`
 
         //Changes top sticker to attack phase
         this.gameInstance.phase.style.backgroundImage = `url(images/scenery/attackphase.png)`;
@@ -42,7 +36,6 @@ class Fight {
     removeEnemy(enemy : Enemy){
         let i = this.enemies.indexOf(enemy)
         this.enemies.splice(i, 1)
-        console.log(this.enemies.length)
         this.enemiesAmount -=1
     }
 

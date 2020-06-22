@@ -3,6 +3,7 @@ class Tower {
     //HTML & instance variables
     element : HTMLElement
     gameInstance : Game
+    text : HTMLElement
 
 
     //position handling & parameters for the tower
@@ -13,6 +14,7 @@ class Tower {
     y : number = 160
     mouseX : number = 0
     mouseY : number = 0
+    dragged : boolean = false
 
     constructor(level : number, gameInstance : Game){
 
@@ -30,6 +32,12 @@ class Tower {
         game.appendChild(this.element)
         this.element.style.transform = `translate(${this.x}px, ${this.y}px)`
 
+
+        this.text = document.createElement("drag")
+        this.text.innerHTML = `Click to drag`
+        this.element.appendChild(this.text)
+
+
         //Eventlisteners
         this.element.addEventListener('mousemove', ()=> this.hoverTower(event))
         this.element.addEventListener('mouseout', ()=> this.hoverTowerClear(event))
@@ -40,14 +48,12 @@ class Tower {
         //Defines center height of the tower
         public getLocationY(){
             let position = this.element.getBoundingClientRect()
-            console.log(position.height*0.5 + position.y)
             return position.height*0.5 + position.y
         }
 
         //Defines center width of the tower
         public getLocationX(){
             let position = this.element.getBoundingClientRect()
-            console.log(position.width*0.5 + position.x)
             return position.width*0.5 + position.x
         }
 
@@ -69,7 +75,6 @@ class Tower {
         //Create highlight box on hover
         hoverTower(e){
             this.element.style.border = "groove"
-            console.log(e)
         }
         
         //Removes highlight box on hover
@@ -82,6 +87,8 @@ class Tower {
             this.mouseX = e.clientX
             this.mouseY = e.clientY
             this.element.style.transform = `translate(${this.mouseX}px, ${this.mouseY}px)`
+            this.text.style.display = "none"
+            this.dragged = true
         }
 
         //Enables drag functionality
@@ -92,7 +99,6 @@ class Tower {
 
         //Disables drag functionality
         removeDragfunction(){
-            console.log("eventlistener removed");
             this.element.draggable = false
             this.element.style.cursor = "default"
         }

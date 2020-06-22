@@ -57,6 +57,27 @@ tower {
     cursor: grab;
 }
 
+drag {
+    font-size: 35px;
+    margin: 100px;
+    color: white;
+
+}
+
+a {
+    font-size: 2.5vw;
+    color: white;
+    margin-left: 25vw;
+    margin-top: 15vw;
+    text-decoration: none;
+}
+a:hover{
+    font-weight: 3000;
+    color: black;
+    transition: 0.5s;
+}
+
+
 tower:hover {
     filter: hue-rotate(40deg);
     transition: 0.5s;

@@ -11,9 +11,10 @@ class Enemy {
     y : number = 200
     xspeed : number = 0
     yspeed : number = 0
-    strength : number
+    speed : number
     healthPoints : number
     damage : number
+    boss : string = ""
     
     //State machine for movement
     state : number = 0
@@ -24,12 +25,18 @@ class Enemy {
         this.fightInstance = fightInstance
 
         //Initialize enemy: || STRENGTH || HP || DAMAGE || SPEED ||
-        this.strength = level
+        this.speed = 0.85 / level
         this.healthPoints = level*100
         this.damage = level*60
-        this.xspeed = 0.75 / this.strength
         this.yspeed = 0
+        
+        //change speed for bosses
+        if(level > 3 ) {
+            this.speed = level/15
+        }
 
+        this.xspeed = this.speed
+        
         //Create enemy
         this.element = document.createElement("enemy")
         let game = document.getElementsByTagName("game")[0]
@@ -37,8 +44,11 @@ class Enemy {
         this.element.style.filter = `hue-rotate(${level*90}deg)`
 
         //Create HP bar
+        if(level > 3){
+            this.boss = " BOSS"
+        }
         this.healthBar = document.createElement("healthbar")
-        this.healthBar.innerHTML = `${this.healthPoints}HP`
+        this.healthBar.innerHTML = `${this.healthPoints}HP${this.boss}`
         this.element.appendChild(this.healthBar)
 
     }
@@ -59,8 +69,7 @@ class Enemy {
         switch (this.state) {
             case 0 : 
                 if (this.x > 350) {
-                    console.log("move down")
-                    this.yspeed = 0.75 / this.strength
+                    this.yspeed = this.speed
                     this.xspeed = 0
                     this.state = 1
                 }
@@ -68,8 +77,7 @@ class Enemy {
 
             case 1 :
                 if (this.y > 700) {
-                    console.log("move right")
-                    this.xspeed = 0.75 / this.strength
+                    this.xspeed = this.speed
                     this.yspeed = 0
                     this.state = 2
                 }
@@ -77,8 +85,7 @@ class Enemy {
 
             case 2 :
                 if (this.x > 1320){
-                    console.log("move up")
-                    this.yspeed = -0.75 / this.strength
+                    this.yspeed = this.speed*-1
                     this.xspeed = 0
                     this.state = 3
                 break;
@@ -86,8 +93,7 @@ class Enemy {
 
             case 3 :
                 if (this.y < 460){
-                    console.log("move right")
-                    this.xspeed = 0.75 / this.strength
+                    this.xspeed = this.speed
                     this.yspeed = 0
                     // this.state = 4
                     break;
@@ -95,7 +101,6 @@ class Enemy {
                 
                 case 4 : 
                 if (this.x > innerWidth - 260){
-                    console.log("reset")
                 this.x = 0
                 this.y = 200
                 this.state = 0
@@ -108,7 +113,7 @@ class Enemy {
 
     //Update HP when hit, removes enemy when HP < 1
     updateHP(){
-        this.healthBar.innerHTML = `${this.healthPoints}HP`
+        this.healthBar.innerHTML = `${this.healthPoints}HP${this.boss}`
         this.element.appendChild(this.healthBar)
         if (this.healthPoints < 1){
             this.element.remove()

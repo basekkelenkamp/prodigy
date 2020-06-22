@@ -10,7 +10,7 @@ class Bullet {
     y : number = 0
     xMove : number = 500
     distance : number 
-    speed : number = 2
+    speed : number = 4
     damage : number
 
 
